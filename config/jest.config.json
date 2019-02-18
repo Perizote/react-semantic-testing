@@ -1,0 +1,8 @@
+{
+  "rootDir": "../",
+  "testMatch": [
+    "<rootDir>/**/__tests__/?(*.)(test).{js}",
+    "<rootDir>/**/?(*.)(test).js?(x)"
+  ],
+  "moduleFileExtensions": ["js"]
+}
