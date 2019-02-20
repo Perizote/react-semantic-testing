@@ -1,16 +1,14 @@
 import React, { Component } from 'react'
 
-export class CartWithAsyncState extends Component {
+export class CartWithAsyncChanges extends Component {
   state = {
     products: 0,
-    isLoading: false,
   }
 
   componentDidMount = async () =>  {
-    this.setState({ isLoading: true })
-    const initialCount = await this.getInitialProducts()
+    const products = await this.getInitialProducts()
 
-    this.setState({ products: initialCount, isLoading: false })
+    this.setState({ products })
   }
 
   getInitialProducts = async () =>  {
@@ -28,7 +26,7 @@ export class CartWithAsyncState extends Component {
   render() {
     return (
       <div data-test="cart">
-        { !this.state.isLoading && <button data-test="remove" onClick={ this.remove }>-</button> }
+        <button data-test="remove" onClick={ this.remove }>-</button>
         <span data-test="products">{ this.state.products }</span>
         <button data-test="add" onClick={ this.add }>+</button>
       </div>

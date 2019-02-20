@@ -1,9 +1,9 @@
 import React from 'react'
 
-import { CartWithAsyncState as Cart } from './CartWithAsyncState'
-import { mount } from '../index'
+import { CartWithAsyncChanges as Cart } from './CartWithAsyncChanges'
+import { mount } from '../../index'
 
-describe('cart', () => {
+describe('cart with async changes', () => {
   let cart
 
   beforeEach(() => {
@@ -23,14 +23,13 @@ describe('cart', () => {
   })
 
   it('can add a product', async () => {
-    expect((await cart.getByDataTest('products').willChange()).getText()).toBe('10')
-    cart.getByDataTest('add').click()
+    (await cart.willChange()).getByDataTest('add').click()
 
     expect(cart.getByDataTest('products').getText()).toBe('11')
   })
 
   it('can remove a product', async () => {
-    (await cart.getByDataTest('remove').willRender()).click()
+    (await cart.willChange()).getByDataTest('remove').click()
 
     expect(cart.getByDataTest('products').getText()).toBe('9')
   })
