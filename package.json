@@ -2,14 +2,13 @@
   "name": "react-testing-tools",
   "version": "0.0.1",
   "description": "",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
     "test": "jest --config config/jest.config.json"
   },
   "keywords": [
     "testing",
     "test",
-    "e2e",
     "integration",
     "unit",
     "tools",
@@ -18,9 +17,7 @@
     "javascript",
     "dom",
     "js",
-    "jest",
-    "jsdom",
-    "mount"
+    "jest"
   ],
   "author": "Sergio Peris Perez <sergio.perizote@gmail.com>",
   "license": "MIT",
@@ -33,7 +30,6 @@
     "babel-jest": "^24.1.0",
     "babel-preset-react-app": "^7.0.1",
     "jest": "^24.1.0",
-    "jsdom": "^13.2.0",
     "react": "^16.8.2",
     "react-dom": "^16.8.2"
   },

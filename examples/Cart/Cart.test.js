@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { Cart } from './Cart'
-import { mount } from '../../index'
+import { mount } from '../mount'
 
 describe('cart with async render', () => {
   let cart
