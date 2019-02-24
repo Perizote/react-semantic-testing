@@ -1,11 +1,12 @@
 import { unmountComponentAtNode } from 'react-dom'
 
 import { observeChanges, observeNewRenders } from './mutationObserver'
+import { getDispatchableEvents } from './getDispatchableEvents'
 
 function withTools(node, lastQuery) {
   return {
     unmount() {
-      unmountComponentAtNode(node) // TODO: Make it generic
+      unmountComponentAtNode(node)
       document.body.removeChild(node)
     },
     getRawNode() {
@@ -13,7 +14,8 @@ function withTools(node, lastQuery) {
     },
     getByDataTest(dataTest) {
       const lastQuery = () => this.getByDataTest(dataTest)
-      return withTools(node.querySelector(`[data-test="${ dataTest }"]`), lastQuery)
+      const { unmount, ...restOfTools } = withTools(node.querySelector(`[data-test="${ dataTest }"]`), lastQuery)
+      return restOfTools
     },
     getText() {
       return node.textContent
@@ -21,13 +23,12 @@ function withTools(node, lastQuery) {
     getTree() {
       return node.innerHTML
     },
-    click() {
-      const WindowEvent = document.defaultView.Event
-      const event = new WindowEvent('click', { bubbles: true, cancelable: true, button: 0 })
-      node.dispatchEvent(event)
-    },
+    ...getDispatchableEvents(node),
     async willChange() {
-      const onChange = () => withTools(node, lastQuery)
+      const onChange = () => {
+        const { unmount, willChange, willRender, ...restOfTools } = withTools(node, lastQuery)
+        return restOfTools
+      }
 
       return observeChanges(onChange, node)
     },
@@ -37,7 +38,8 @@ function withTools(node, lastQuery) {
 
         if (!lastNode) { return }
 
-        return withTools(lastNode, lastQuery)
+        const { unmount, willChange, willRender, ...restOfTools } = withTools(lastNode, lastQuery)
+        return restOfTools
       }
 
       return observeNewRenders(onRender)
