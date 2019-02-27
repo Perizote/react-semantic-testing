@@ -12,9 +12,9 @@ async function createMutationObserver(callback, { timeout = 3000, node, error } 
     }
 
     function onMutation() {
-      const asd = callback()
+      const result = callback()
       finish()
-      resolve(asd)
+      resolve(result)
     }    
     
     function finish() {

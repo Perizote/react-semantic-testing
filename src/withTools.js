@@ -2,8 +2,9 @@ import { unmountComponentAtNode } from 'react-dom'
 
 import { observeChanges, observeNewRenders } from './mutationObserver'
 import { getDispatchableEvents } from './getDispatchableEvents'
+import { setAsLastQuery, lastQuery } from './lastQuery'
 
-function withTools(node, lastQuery) {
+function withTools(node) {
   return {
     unmount() {
       unmountComponentAtNode(node)
@@ -12,11 +13,7 @@ function withTools(node, lastQuery) {
     getRawNode() {
       return node
     },
-    getByDataTest(dataTest) {
-      const lastQuery = () => this.getByDataTest(dataTest)
-      const { unmount, ...restOfTools } = withTools(node.querySelector(`[data-test="${ dataTest }"]`), lastQuery)
-      return restOfTools
-    },
+    ...getQueries(node),
     getText() {
       return node.textContent
     },
@@ -26,7 +23,7 @@ function withTools(node, lastQuery) {
     ...getDispatchableEvents(node),
     async willChange() {
       const onChange = () => {
-        const { unmount, willChange, willRender, ...restOfTools } = withTools(node, lastQuery)
+        const { unmount, willChange, willRender, ...restOfTools } = withTools(node)
         return restOfTools
       }
 
@@ -34,16 +31,36 @@ function withTools(node, lastQuery) {
     },
     async willRender() {
       const onRender = () => {
-        const lastNode = lastQuery().getRawNode()
+        const renderedNode = lastQuery().getRawNode()
 
-        if (!lastNode) { return }
+        if (!renderedNode) { return }
 
-        const { unmount, willChange, willRender, ...restOfTools } = withTools(lastNode, lastQuery)
+        const { unmount, willChange, willRender, ...restOfTools } = withTools(renderedNode)
         return restOfTools
       }
 
       return observeNewRenders(onRender)
     }
+  }
+}
+
+function getQueries(node) {
+  const getQueryTools = query => {
+    const { unmount, ...restOfTools } = query()
+    return restOfTools
+  }
+
+  return {
+    getByDataTest(dataTest) {
+      const query = () => withTools(node.querySelector(`[data-test="${ dataTest }"]`))
+      setAsLastQuery(query)
+      return getQueryTools(query)
+    },
+    getByText(text) {
+      const query = () => withTools([ ...node.querySelectorAll('*') ].find(element => text === element.textContent))
+      setAsLastQuery(query)
+      return getQueryTools(query)
+    },
   }
 }
 
