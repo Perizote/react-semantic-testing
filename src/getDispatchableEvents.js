@@ -11,22 +11,28 @@ const EVENT_TYPES = {
 }
 
 function getDispatchableEvents(node) {
-  return Object.keys(EVENT_TYPES).reduce((dispatchableEvents, eventName) => {
-    const event = EVENT_TYPES[eventName]
-
-    return {
-      ...dispatchableEvents,
-      [eventName]: ({ target: { value } = {} } = {}) => {
-        if (!!value) {
-          setNativeValue(node, value)
-        }
-        return dispatchEvent(node, event)
-      },
-    }
-  }, {})
+  return Object.keys(EVENT_TYPES).reduce(getEventNormalizer(node), {})
 }
 
-function dispatchEvent(node, { type, init = {} }) {
+const getEventNormalizer = node => (dispatchableEvents, eventName) => {
+  const event = EVENT_TYPES[eventName]
+
+  return {
+    ...dispatchableEvents,
+    [eventName]: init => {
+      const eventInit = { ...event.init, ...init }
+      const { target: { value } = {} } = eventInit
+
+      if (!!value) {
+        setNativeValue(node, value)
+      }
+
+      return dispatchEvent(node, event.type, eventInit)
+    },
+  }
+}
+
+function dispatchEvent(node, type, init = {}) {
   const WindowEvent = document.defaultView.Event
   const event = new WindowEvent(type, init)
   node.dispatchEvent(event)
