@@ -61,6 +61,14 @@ function getQueries(node) {
       setAsLastQuery(query)
       return getQueryTools(query)
     },
+    getByLabelText(labelText) {
+      const query = () => {
+        const { id: labelId } = [ ...node.querySelectorAll('label') ].find(element => labelText === element.textContent) || {}
+        return withTools(node.querySelector(`[for="${ labelId }"]`))
+      }
+      setAsLastQuery(query)
+      return getQueryTools(query)
+    }
   }
 }
 
