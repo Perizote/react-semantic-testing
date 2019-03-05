@@ -50,20 +50,36 @@ function getQueries(node) {
     return restOfTools
   }
 
+  const getQueryToolsFromList = query => {
+    return query().map(({ unmount, ...restOfTools }) => restOfTools)
+  }
+
+  const getTextComparator = text => node => node.textContent === text
+
   return {
     getByDataTest(dataTest) {
       const query = () => withTools(node.querySelector(`[data-test="${ dataTest }"]`))
       setAsLastQuery(query)
       return getQueryTools(query)
     },
+    getAllByDataTest(dataTest) {
+      const query = () => [ ...node.querySelectorAll(`[data-test="${ dataTest }"]`) ].map(withTools)
+      setAsLastQuery(query)
+      return getQueryToolsFromList(query)
+    },
     getByText(text) {
-      const query = () => withTools([ ...node.querySelectorAll('*') ].find(element => text === element.textContent))
+      const query = () => withTools([ ...node.querySelectorAll('*') ].find(getTextComparator(text)))
       setAsLastQuery(query)
       return getQueryTools(query)
     },
+    getAllByText(text) {
+      const query = () => [ ...node.querySelectorAll('*') ].filter(getTextComparator(text)).map(withTools)
+      setAsLastQuery(query)
+      return getQueryToolsFromList(query)
+    },
     getByLabelText(labelText) {
       const query = () => {
-        const { id: labelId } = [ ...node.querySelectorAll('label') ].find(element => labelText === element.textContent) || {}
+        const { id: labelId } = [ ...node.querySelectorAll('label') ].find(getTextComparator(labelText)) || {}
         return withTools(node.querySelector(`[for="${ labelId }"]`))
       }
       setAsLastQuery(query)
