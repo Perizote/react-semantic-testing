@@ -84,7 +84,17 @@ function getQueries(node) {
       }
       setAsLastQuery(query)
       return getQueryTools(query)
-    }
+    },
+    getByAriaLabel(ariaLabel) {
+      const query = () => withTools(node.querySelector(`[aria-label="${ ariaLabel }"]`))
+      setAsLastQuery(query)
+      return getQueryTools(query)
+    },
+    getAllByAriaLabel(ariaLabel) {
+      const query = () => [ ...node.querySelectorAll(`[aria-label="${ ariaLabel }"]`) ].map(withTools)
+      setAsLastQuery(query)
+      return getQueryToolsFromList(query)
+    },
   }
 }
 

@@ -3,7 +3,7 @@ import React from 'react'
 import { Cart } from './Cart'
 import { mount } from '../mount'
 
-describe('cart with async render', () => {
+describe('cart', () => {
   let cart
 
   beforeEach(() => {
