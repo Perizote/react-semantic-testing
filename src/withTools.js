@@ -1,4 +1,5 @@
 import { unmountComponentAtNode } from 'react-dom'
+import prettyFormat from 'pretty-format'
 
 import { observeChanges, observeNewRenders } from './mutationObserver'
 import { getDispatchableEvents } from './getDispatchableEvents'
@@ -17,8 +18,16 @@ function withTools(node) {
     getText() {
       return node.textContent
     },
-    getTree() {
-      return node.innerHTML
+    getTree(fromNode = node, options) {
+      const { DOMElement, DOMCollection } = prettyFormat.plugins
+      const tree = prettyFormat(fromNode, {
+        plugins: [ DOMElement, DOMCollection ],
+        printFunctionName: false,
+        highlight: true,
+        ...options,
+      })
+
+      console.log(tree)
     },
     ...getDispatchableEvents(node),
     async willChange() {
