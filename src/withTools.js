@@ -104,6 +104,16 @@ function getQueries(node) {
       setAsLastQuery(query)
       return getQueryToolsFromList(query)
     },
+    getByAltText(altText) {
+      const query = () => withTools(node.querySelector(`[alt="${ altText }"]`))
+      setAsLastQuery(query)
+      return getQueryTools(query)
+    },
+    getAllByAltText(altText) {
+      const query = () => [ ...node.querySelectorAll(`[alt="${ altText }"]`) ].map(withTools)
+      setAsLastQuery(query)
+      return getQueryToolsFromList(query)
+    },
   }
 }
 
