@@ -114,6 +114,16 @@ function getQueries(node) {
       setAsLastQuery(query)
       return getQueryToolsFromList(query)
     },
+    getByRole(role) {
+      const query = () => withTools(node.querySelector(`[role="${ role }"]`))
+      setAsLastQuery(query)
+      return getQueryTools(query)
+    },
+    getByValue(value) {
+      const query = () => withTools(node.querySelector(`[value="${ value }"]`))
+      setAsLastQuery(query)
+      return getQueryTools(query)
+    }
   }
 }
 
