@@ -26,7 +26,7 @@ export class CartWithAsyncRender extends Component {
   render() {
     const { isLoading, products } = this.state
 
-    if (isLoading) { return null }
+    if (isLoading) { return <span>loading</span> }
 
     return (
       <div data-test="cart">

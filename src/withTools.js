@@ -1,7 +1,7 @@
 import { unmountComponentAtNode } from 'react-dom'
 import prettyFormat from 'pretty-format'
 
-import { observeChanges, observeNewRenders } from './mutationObserver'
+import { observeChanges, observeNewRenders, observeDisappearances } from './mutationObserver'
 import { getDispatchableEvents } from './getDispatchableEvents'
 import { setAsLastQuery, lastQuery } from './lastQuery'
 
@@ -29,6 +29,9 @@ function withTools(node) {
 
       console.log(tree)
     },
+    isRendered() {
+      return document.body.contains(node)
+    },
     ...getDispatchableEvents(node),
     async willChange() {
       const onChange = () => {
@@ -49,6 +52,22 @@ function withTools(node) {
       }
 
       return observeNewRenders(onRender)
+    },
+    async willDisappear() {
+      const onDisappear = mutations => {
+        const hasBeenDisappeared = mutations
+          .filter(({ removedNodes }) => removedNodes.length > 0)
+          .map(({ removedNodes }) => removedNodes)
+          .flat()
+          .some(removedNode => removedNode.isSameNode(node))
+
+        if (!hasBeenDisappeared) { return }
+
+        const { unmount, willChange, willRender, ...restOfTools } = withTools(node)
+        return restOfTools
+      }
+
+      return observeDisappearances(onDisappear, node)
     }
   }
 }

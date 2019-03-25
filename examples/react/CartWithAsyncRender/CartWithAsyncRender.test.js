@@ -14,6 +14,11 @@ describe('cart with async render', () => {
     cart.unmount()
   })
 
+  it('should stop loading as soon as it gets the products', async () => {
+    expect(cart.getByText('loading').isRendered()).toBeTruthy()
+    expect((await cart.getByText('loading').willDisappear()).isRendered()).toBeFalsy()
+  })
+
   it('can have default products', async () => {
     expect((await cart.getByDataTest('products').willRender()).getText()).toBe('10')
   })
