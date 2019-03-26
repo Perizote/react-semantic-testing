@@ -18,6 +18,9 @@ function withTools(node) {
     getText() {
       return node.textContent
     },
+    getValue() {
+      return node.value
+    },
     logTree(options) {
       const { DOMElement, DOMCollection } = prettyFormat.plugins
       const tree = prettyFormat(node, {
