@@ -85,7 +85,10 @@ function getQueries(node) {
     return query().map(({ unmount, ...restOfTools }) => restOfTools)
   }
 
-  const getTextComparator = text => node => node.textContent === text
+  const getTextComparator = text => node => {
+    const regex = new RegExp(text)
+    return regex.test(node.textContent)
+  }
 
   return {
     getByDataTest(dataTest) {
