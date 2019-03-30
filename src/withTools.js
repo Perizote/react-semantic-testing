@@ -113,8 +113,8 @@ function getQueries(node) {
     },
     getByLabelText(labelText) {
       const query = () => {
-        const { id: labelId } = [ ...node.querySelectorAll('label') ].find(getTextComparator(labelText)) || {}
-        return withTools(node.querySelector(`[for="${ labelId }"]`))
+        const { control: input } = [ ...node.querySelectorAll('label') ].find(getTextComparator(labelText)) || {}
+        return withTools(input)
       }
       setAsLastQuery(query)
       return getQueryTools(query)
