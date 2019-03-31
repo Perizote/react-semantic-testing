@@ -35,6 +35,10 @@ function withTools(node) {
     isRendered() {
       return document.body.contains(node)
     },
+    hasText(text) {
+      const regex = new RegExp(text)
+      return regex.test(node.textContent)
+    },
     ...getDispatchableEvents(node),
     async willChange() {
       const onChange = () => {
