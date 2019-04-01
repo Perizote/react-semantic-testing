@@ -4,6 +4,7 @@ import prettyFormat from 'pretty-format'
 import { observeChanges, observeNewRenders, observeDisappearances } from './mutationObserver'
 import { getDispatchableEvents } from './getDispatchableEvents'
 import { setAsLastQuery, lastQuery } from './lastQuery'
+import { compareText } from './compareText'
 
 function withTools(node) {
   return {
@@ -36,8 +37,7 @@ function withTools(node) {
       return document.body.contains(node)
     },
     hasText(text) {
-      const regex = new RegExp(text)
-      return regex.test(node.textContent)
+      return compareText(text, node.textContent)
     },
     ...getDispatchableEvents(node),
     async willChange() {
@@ -90,8 +90,14 @@ function getQueries(node) {
   }
 
   const getTextComparator = text => node => {
-    const regex = new RegExp(text)
-    return regex.test(node.textContent)
+    return compareText(text, getTextFromNode(node))
+  }
+
+  const getTextFromNode = node => {
+    return [ ...node.childNodes]
+      .filter(({ nodeType, textContent }) => nodeType === Node.TEXT_NODE && Boolean(textContent))
+      .map(({ textContent }) => textContent)
+      .join('')
   }
 
   return {

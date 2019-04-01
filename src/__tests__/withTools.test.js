@@ -47,12 +47,12 @@ describe('withTools', () => {
     })
 
     it('should log the tree of the node', () => {
-      console.log = jest.fn()
+      const spy = jest.spyOn(console, 'log').mockImplementationOnce(() => {})
 
       nodeMountedWithTools.logTree()
 
-      expect(console.log).toHaveBeenCalledTimes(1)
-      const [[firstArg]] = console.log.mock.calls
+      expect(spy).toHaveBeenCalledTimes(1)
+      const [[firstArg]] = spy.mock.calls
       expect(firstArg).toMatchInlineSnapshot(`
 "[36m<div>[39m
   [36m<div>[39m
@@ -60,12 +60,10 @@ describe('withTools', () => {
   [36m</div>[39m
 [36m</div>[39m"
 `)
-      console.log.mockClear()
     })
 
     it('should have text', () => {
       expect(nodeMountedWithTools.hasText('a simple node')).toBeTruthy()
-      expect(nodeMountedWithTools.hasText('simple')).toBeTruthy()
       expect(nodeMountedWithTools.hasText(/A Simple Node/i)).toBeTruthy()
     })
   })
