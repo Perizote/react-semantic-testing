@@ -94,8 +94,10 @@ function getQueries(node) {
   }
 
   const getTextFromNode = node => {
+    const isTextNode = ({ nodeType, textContent }) => nodeType === Node.TEXT_NODE && Boolean(textContent)
+
     return [ ...node.childNodes]
-      .filter(({ nodeType, textContent }) => nodeType === Node.TEXT_NODE && Boolean(textContent))
+      .filter(isTextNode)
       .map(({ textContent }) => textContent)
       .join('')
   }
