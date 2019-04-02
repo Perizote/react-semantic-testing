@@ -42,9 +42,9 @@ function setNativeValue(node, value) {
   const prototype = Object.getPrototypeOf(node)
   const { set: prototypeValueSetter } = Object.getOwnPropertyDescriptor(prototype, 'value') || {}
   const { set: valueSetter } = Object.getOwnPropertyDescriptor(node, 'value') || {}
-  
+
   if (!prototypeValueSetter && !valueSetter) {
-    throw new Error(`${ node.tagName } does not have value property`)
+    throw new Error('Element cannot have value property')
   }
 
   if (prototypeValueSetter) {
