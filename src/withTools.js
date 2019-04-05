@@ -9,6 +9,10 @@ import { compareText } from './compareText'
 function withTools(node) {
   return {
     unmount() {
+      if (!withTools(node).isRendered()) {
+        throw new Error('Cannot unmount a node that is not rendered')
+      }
+
       unmountComponentAtNode(node)
       document.body.removeChild(node)
     },

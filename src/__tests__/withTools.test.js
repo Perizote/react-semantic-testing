@@ -28,12 +28,23 @@ describe('withTools', () => {
     })
   })
 
-  it('should unmount the node', () => {
+  describe('unmounting a node', () => {
     const node = `<div>a simple node</div>`
-    const nodeMountedWithTools = mount(node)
-    expect(nodeMountedWithTools.isRendered()).toBeTruthy()
-    nodeMountedWithTools.unmount()
-    expect(nodeMountedWithTools.isRendered()).toBeFalsy()
+
+    it('should remove the node from the dom tree', () => {
+      const nodeMountedWithTools = mount(node)
+      expect(nodeMountedWithTools.isRendered()).toBeTruthy()
+      nodeMountedWithTools.unmount()
+
+      expect(nodeMountedWithTools.isRendered()).toBeFalsy()
+    })
+
+    it('should throw an error if the node is not in the dom', () => {
+      const nodeMountedWithTools = mount(node)
+      nodeMountedWithTools.unmount()
+      expect(nodeMountedWithTools.isRendered()).toBeFalsy()
+      expect(nodeMountedWithTools.unmount).toThrow('Cannot unmount a node that is not rendered')
+    })
   })
 
   describe('when mounting', () => {
