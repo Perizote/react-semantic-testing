@@ -39,6 +39,9 @@ function withTools(node) {
     hasText(text) {
       return compareText(text, node.textContent)
     },
+    isDisabled() {
+      return node.disabled
+    },
     ...getDispatchableEvents(node),
     async willChange() {
       const onChange = () => {
