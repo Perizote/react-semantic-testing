@@ -5,7 +5,12 @@ describe('withQueries', () => {
     <div role="main">
       <p data-test="a-data-test">a text</p>
       <label for="an-id">a label text</label>
-      <input id="an-id" value="a value" />
+      <input id="an-id" value="an input value" />
+      <select>
+        <option value="doesnt really matter" selected>a select value</option>
+        <option value="who cares">a not selected option</option>
+      </select>
+      <textarea>a textarea value</textarea>
       <a href="#" role="button">aaa</a>
       <img alt="an alt text" />
     </div>
@@ -27,7 +32,7 @@ describe('withQueries', () => {
 
   it('should get all nodes by its text', () => {
     expect(nodeMountedWithTools.getAllByText('a text')).toHaveLength(1)
-    expect(nodeMountedWithTools.getAllByText(/A Text/i)).toHaveLength(1)
+    expect(nodeMountedWithTools.getAllByText(/^A Text$/i)).toHaveLength(1)
   })
 
   it('should get a form control by its label', () => {
@@ -40,7 +45,9 @@ describe('withQueries', () => {
   })
 
   it('should get a form control by its value', () => {
-    expect(nodeMountedWithTools.getByValue('a value').isRendered()).toBeTruthy()
+    expect(nodeMountedWithTools.getByValue('an input value').isRendered()).toBeTruthy()
+    expect(nodeMountedWithTools.getByValue('a select value').isRendered()).toBeTruthy()
+    expect(nodeMountedWithTools.getByValue(/a TEXTAREA value/i).isRendered()).toBeTruthy()
   })
 
   it('should get a node by its alt text', () => {

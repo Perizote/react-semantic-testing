@@ -164,7 +164,16 @@ function getQueries(node) {
       return getQueryTools(query)
     },
     getByValue(value) {
-      const query = () => withTools(node.querySelector(`[value="${ value }"]`))
+      const query = () => withTools(
+        [ ...node.querySelectorAll('input, select, textarea') ].find(({ options, value: nodeValue }) => {
+          if (Boolean(options)) {
+            const optionSelected = [ ...options ].find(option => option.selected)
+            return compareText(value, optionSelected.textContent)
+          }
+
+          return compareText(value, nodeValue)
+        })
+      )
       setAsLastQuery(query)
       return getQueryTools(query)
     }
