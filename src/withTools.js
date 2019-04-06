@@ -9,7 +9,7 @@ import { compareText } from './compareText'
 function withTools(node) {
   return {
     unmount() {
-      if (!withTools(node).isRendered()) {
+      if (!document.body.contains(node)) {
         throw new Error('Cannot unmount a node that is not rendered')
       }
 
@@ -36,15 +36,6 @@ function withTools(node) {
       })
 
       console.log(tree)
-    },
-    isRendered() {
-      return document.body.contains(node)
-    },
-    hasText(text) {
-      return compareText(text, node.textContent)
-    },
-    isDisabled() {
-      return node.disabled
     },
     ...getDispatchableEvents(node),
     async willChange() {

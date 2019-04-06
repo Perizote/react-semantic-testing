@@ -23,40 +23,40 @@ describe('withMutations', () => {
     jest.useRealTimers()
   }
 
-  it('should observe changes', async () => {
+  it('should observe changes', () => {
     const changedText = 'a changed text'
     const asyncChange = () => setTimeout(() => mountedNodeWithTools.getRawNode().textContent = changedText)
     expect(mountedNodeWithTools.getText()).toBe(initialText)
 
     asyncChange()
 
-    expect((await mountedNodeWithTools.willChange()).getText()).toBe(changedText)
+    return expect(mountedNodeWithTools.willChange()).resolves.toHaveText(changedText)
   })
 
   it('should throw an error when nothing changes', () => {
     testThatObserverThrowsError('willChange', 'Timeout waiting for node to change')
   })
 
-  it('should observe new renders', async () => {
+  it('should observe new renders', () => {
     const asyncRender = () => setTimeout(() => mountedNodeWithTools.getRawNode().innerHTML = '<p>another node</p>')
-    expect(mountedNodeWithTools.getByText('another node').isRendered()).toBeFalsy()
+    expect(mountedNodeWithTools.getByText('another node')).not.toBeRendered()
 
     asyncRender()
 
-    expect((await mountedNodeWithTools.getByText('another node').willRender()).isRendered()).toBeTruthy()
+    return expect(mountedNodeWithTools.getByText('another node').willRender()).resolves.toBeRendered()
   })
 
   it('should throw an error when nothing new is rendered', () => {
     testThatObserverThrowsError('willRender', 'Timeout waiting for node to render')
   })
 
-  it('should observe disappearances', async () => {
+  it('should observe disappearances', () => {
     const asyncDisappear = () => setTimeout(() => mountedNodeWithTools.getRawNode().innerHTML = null)
-    expect(mountedNodeWithTools.getByText(initialText).isRendered()).toBeTruthy()
+    expect(mountedNodeWithTools.getByText(initialText)).toBeRendered()
 
     asyncDisappear()
 
-    expect((await mountedNodeWithTools.getByText(initialText).willDisappear()).isRendered()).toBeFalsy()
+    return expect(mountedNodeWithTools.getByText(initialText).willDisappear()).resolves.not.toBeRendered()
   })
 
   it('should throw an error when nothing disappears', () => {

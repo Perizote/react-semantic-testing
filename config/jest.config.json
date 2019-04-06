@@ -4,5 +4,6 @@
     "<rootDir>/**/__tests__/?(*.)(test).{js}",
     "<rootDir>/**/?(*.)(test).js?(x)"
   ],
-  "moduleFileExtensions": ["js"]
+  "moduleFileExtensions": ["js"],
+  "setupFilesAfterEnv": ["<rootDir>/config/setup.js"]
 }

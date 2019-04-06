@@ -26,8 +26,8 @@ describe('withQueries', () => {
   })
 
   it('should get a node by its text', () => {
-    expect(nodeMountedWithTools.getByText('a text').isRendered()).toBeTruthy()
-    expect(nodeMountedWithTools.getByText(/A Text/i).isRendered()).toBeTruthy()
+    expect(nodeMountedWithTools.getByText('a text')).toBeRendered()
+    expect(nodeMountedWithTools.getByText(/A Text/i)).toBeRendered()
   })
 
   it('should get all nodes by its text', () => {
@@ -36,22 +36,22 @@ describe('withQueries', () => {
   })
 
   it('should get a form control by its label', () => {
-    expect(nodeMountedWithTools.getByLabelText('a label text').isRendered()).toBeTruthy()
-    expect(nodeMountedWithTools.getByLabelText(/A Label TEXT/i).isRendered()).toBeTruthy()
+    expect(nodeMountedWithTools.getByLabelText('a label text')).toBeRendered()
+    expect(nodeMountedWithTools.getByLabelText(/A Label TEXT/i)).toBeRendered()
   })
 
   it('should get a node by its role', () => {
-    expect(nodeMountedWithTools.getByRole('button').isRendered()).toBeTruthy()
+    expect(nodeMountedWithTools.getByRole('button')).toBeRendered()
   })
 
   it('should get a form control by its value', () => {
-    expect(nodeMountedWithTools.getByValue('an input value').isRendered()).toBeTruthy()
-    expect(nodeMountedWithTools.getByValue('a select value').isRendered()).toBeTruthy()
-    expect(nodeMountedWithTools.getByValue(/a TEXTAREA value/i).isRendered()).toBeTruthy()
+    expect(nodeMountedWithTools.getByValue('an input value')).toBeRendered()
+    expect(nodeMountedWithTools.getByValue('a select value')).toBeRendered()
+    expect(nodeMountedWithTools.getByValue(/a TEXTAREA value/i)).toBeRendered()
   })
 
   it('should get a node by its alt text', () => {
-    expect(nodeMountedWithTools.getByAltText('an alt text').isRendered()).toBeTruthy()
+    expect(nodeMountedWithTools.getByAltText('an alt text')).toBeRendered()
   })
 
   it('should get all nodes by its alt text', () => {
@@ -59,7 +59,7 @@ describe('withQueries', () => {
   })
 
   it('should get a node by its data-test', () => {
-    expect(nodeMountedWithTools.getByDataTest('a-data-test').isRendered()).toBeTruthy()
+    expect(nodeMountedWithTools.getByDataTest('a-data-test')).toBeRendered()
   })
 
   it('should get all nodes by its data-test', () => {

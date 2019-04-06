@@ -14,23 +14,21 @@ describe('cart with async changes', () => {
     cart.unmount()
   })
 
-  it('can have default products', async () => {
-    const productsBeforeWaiting = cart.getByDataTest('products').getText()
-    expect(productsBeforeWaiting).toBe('0')
+  it('can have default products', () => {
+    expect(cart.getByDataTest('products')).toHaveText('0')
 
-    const productsAfterWaiting = (await cart.getByDataTest('products').willChange()).getText()
-    expect(productsAfterWaiting).toBe('10')
+    return expect(cart.getByDataTest('products').willChange()).resolves.toHaveText('10')
   })
 
   it('can add a product', async () => {
     (await cart.willChange()).getByDataTest('add').click()
 
-    expect(cart.getByDataTest('products').getText()).toBe('11')
+    expect(cart.getByDataTest('products')).toHaveText('11')
   })
 
   it('can remove a product', async () => {
     (await cart.willChange()).getByDataTest('remove').click()
 
-    expect(cart.getByDataTest('products').getText()).toBe('9')
+    expect(cart.getByDataTest('products')).toHaveText('9')
   })
 })

@@ -33,16 +33,16 @@ describe('withTools', () => {
 
     it('should remove the node from the dom tree', () => {
       const nodeMountedWithTools = mount(node)
-      expect(nodeMountedWithTools.isRendered()).toBeTruthy()
+      expect(nodeMountedWithTools).toBeRendered()
       nodeMountedWithTools.unmount()
 
-      expect(nodeMountedWithTools.isRendered()).toBeFalsy()
+      expect(nodeMountedWithTools).not.toBeRendered()
     })
 
     it('should throw an error if the node is not in the dom', () => {
       const nodeMountedWithTools = mount(node)
       nodeMountedWithTools.unmount()
-      expect(nodeMountedWithTools.isRendered()).toBeFalsy()
+      expect(nodeMountedWithTools).not.toBeRendered()
       expect(nodeMountedWithTools.unmount).toThrow('Cannot unmount a node that is not rendered')
     })
   })
@@ -60,7 +60,7 @@ describe('withTools', () => {
     })
 
     it('should be rendered', () => {
-      expect(nodeMountedWithTools.isRendered()).toBeTruthy()
+      expect(nodeMountedWithTools).toBeRendered()
     })
 
     it('should log the tree of the node', () => {
@@ -82,14 +82,12 @@ describe('withTools', () => {
     })
 
     it('should have text', () => {
-      expect(nodeMountedWithTools.hasText('a disabled button')).toBeTruthy()
-      expect(nodeMountedWithTools.hasText(/A Disabled Button/i)).toBeTruthy()
+      expect(nodeMountedWithTools).toHaveText('a disabled button')
+      expect(nodeMountedWithTools).toHaveText(/A Disabled Button/i)
     })
 
     it('should be disabled', () => {
-      expect(
-        nodeMountedWithTools.getByText('a disabled button').isDisabled(),
-      ).toBeTruthy()
+      expect(nodeMountedWithTools.getByText('a disabled button')).toBeDisabled()
     })
   })
 })

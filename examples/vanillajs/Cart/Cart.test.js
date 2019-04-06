@@ -13,18 +13,18 @@ describe('cart', () => {
   })
 
   it('can have default products', () => {
-    expect(cart.getByDataTest('products').getText()).toBe('10')
+    expect(cart.getByDataTest('products')).toHaveText('10')
   })
 
   it('can add a product', () => {
     cart.getByDataTest('add').click()
 
-    expect(cart.getByDataTest('products').getText()).toBe('11')
+    expect(cart.getByDataTest('products')).toHaveText('11')
   })
 
   it('can remove a product', () => {
     cart.getByDataTest('remove').click()
 
-    expect(cart.getByDataTest('products').getText()).toBe('9')
+    expect(cart.getByDataTest('products')).toHaveText('9')
   })
 })
