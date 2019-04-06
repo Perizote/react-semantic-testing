@@ -1,5 +1,7 @@
 import { mount } from './mount.util'
-import '../assertions'
+import { assertions } from '../'
+
+expect.extend(assertions)
 
 describe('assertions', () => {
   it('can be used to extend jest', () => {
