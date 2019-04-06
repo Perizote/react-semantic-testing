@@ -4,7 +4,8 @@
   "description": "",
   "main": "src/index.js",
   "scripts": {
-    "test": "jest --config config/jest.config.json"
+    "test": "jest --config config/jest.config.json",
+    "test:watch": "jest --watch --config config/jest.config.json"
   },
   "keywords": [
     "testing",
