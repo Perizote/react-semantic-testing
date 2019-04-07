@@ -23,7 +23,7 @@ const assertions = {
   toHaveText(node, text) {
     return compareText(text, node.getText())
       ? buildPassingMatcher(`expected node not to have text "${ text }" but actually does`)
-      : buildFailingMatcher(`expected node to have text "${ text }" but instead has "${ node.getText() }"`)
+      : buildFailingMatcher(`expected node to have text "${ text }" but instead has "${ node.getText().trim() }"`)
   },
   toBeDisabled(node) {
     return node.getRawNode().disabled
