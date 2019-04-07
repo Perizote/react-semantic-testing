@@ -36,7 +36,7 @@ const withTools = (node) => ({
 
 function withMutations (node) {
   return {
-    async willChange() {
+    async waitUntilItChanges() {
       const onChange = () => withTools(node)
 
       return createMutationObserver(onChange, {
@@ -44,7 +44,7 @@ function withMutations (node) {
         error: 'Timeout waiting for node to change',
       })
     },
-    async willRender() {
+    async waitUntilItAppears() {
       const onRender = () => {
         const renderedNode = lastQuery().getRawNode()
 
@@ -58,7 +58,7 @@ function withMutations (node) {
         error: 'Timeout waiting for node to render',
       })
     },
-    async willDisappear() {
+    async waitUntilItDisappears() {
       const onDisappear = mutations => {
         const hasBeenDisappeared = mutations
           .filter(({ removedNodes }) => removedNodes.length > 0)

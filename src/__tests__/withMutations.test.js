@@ -30,11 +30,11 @@ describe('withMutations', () => {
 
     asyncChange()
 
-    return expect(mountedNodeWithTools.willChange()).resolves.toHaveText(changedText)
+    return expect(mountedNodeWithTools.waitUntilItChanges()).resolves.toHaveText(changedText)
   })
 
   it('should throw an error when nothing changes', () => {
-    testThatObserverThrowsError('willChange', 'Timeout waiting for node to change')
+    testThatObserverThrowsError('waitUntilItChanges', 'Timeout waiting for node to change')
   })
 
   it('should observe new renders', () => {
@@ -43,11 +43,11 @@ describe('withMutations', () => {
 
     asyncRender()
 
-    return expect(mountedNodeWithTools.getByText('another node').willRender()).resolves.toBeRendered()
+    return expect(mountedNodeWithTools.getByText('another node').waitUntilItAppears()).resolves.toBeRendered()
   })
 
   it('should throw an error when nothing new is rendered', () => {
-    testThatObserverThrowsError('willRender', 'Timeout waiting for node to render')
+    testThatObserverThrowsError('waitUntilItAppears', 'Timeout waiting for node to render')
   })
 
   it('should observe disappearances', () => {
@@ -56,10 +56,10 @@ describe('withMutations', () => {
 
     asyncDisappear()
 
-    return expect(mountedNodeWithTools.getByText(initialText).willDisappear()).resolves.not.toBeRendered()
+    return expect(mountedNodeWithTools.getByText(initialText).waitUntilItDisappears()).resolves.not.toBeRendered()
   })
 
   it('should throw an error when nothing disappears', () => {
-    testThatObserverThrowsError('willDisappear', 'Timeout waiting for node to disappear')
+    testThatObserverThrowsError('waitUntilItDisappears', 'Timeout waiting for node to disappear')
   })
 })

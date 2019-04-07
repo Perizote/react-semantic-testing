@@ -16,21 +16,21 @@ describe('cart with async render', () => {
 
   it('should stop loading as soon as it gets the products', () => {
     expect(cart.getByText('loading')).toBeRendered()
-    return expect(cart.getByText('loading').willDisappear()).resolves.not.toBeRendered()
+    return expect(cart.getByText('loading').waitUntilItDisappears()).resolves.not.toBeRendered()
   })
 
   it('can have default products', () => {
-    return expect(cart.getByDataTest('products').willRender()).resolves.toHaveText('10')
+    return expect(cart.getByDataTest('products').waitUntilItAppears()).resolves.toHaveText('10')
   })
 
   it('can add a product', async () => {
-    (await cart.getByDataTest('add').willRender()).click()
+    (await cart.getByDataTest('add').waitUntilItAppears()).click()
 
     expect(cart.getByDataTest('products')).toHaveText('11')
   })
 
   it('can remove a product', async () => {
-    (await cart.getByDataTest('remove').willRender()).click()
+    (await cart.getByDataTest('remove').waitUntilItAppears()).click()
 
     expect(cart.getByDataTest('products')).toHaveText('9')
   })

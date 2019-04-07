@@ -17,17 +17,17 @@ describe('cart with async changes', () => {
   it('can have default products', () => {
     expect(cart.getByDataTest('products')).toHaveText('0')
 
-    return expect(cart.getByDataTest('products').willChange()).resolves.toHaveText('10')
+    return expect(cart.getByDataTest('products').waitUntilItChanges()).resolves.toHaveText('10')
   })
 
   it('can add a product', async () => {
-    (await cart.willChange()).getByDataTest('add').click()
+    (await cart.waitUntilItChanges()).getByDataTest('add').click()
 
     expect(cart.getByDataTest('products')).toHaveText('11')
   })
 
   it('can remove a product', async () => {
-    (await cart.willChange()).getByDataTest('remove').click()
+    (await cart.waitUntilItChanges()).getByDataTest('remove').click()
 
     expect(cart.getByDataTest('products')).toHaveText('9')
   })
