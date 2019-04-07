@@ -10,7 +10,7 @@ const EVENT_TYPES = {
   scroll: { type: 'scroll' },
 }
 
-function getDispatchableEvents(node) {
+function withEvents(node) {
   return Object.keys(EVENT_TYPES).reduce(getEventNormalizer(node), {})
 }
 
@@ -54,4 +54,4 @@ function setNativeValue(node, value) {
   valueSetter.call(node, value)
 }
 
-export { getDispatchableEvents }
+export { withEvents }

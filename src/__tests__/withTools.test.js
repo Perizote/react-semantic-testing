@@ -1,33 +1,6 @@
-import { withTools } from '../'
 import { mount } from './mount.util'
 
 describe('withTools', () => {
-  describe('without mounting', () => {
-    const node = `
-      <select>
-        <option value="1" selected>Gilded Rose</option>
-        <option value="2">Mars rover</option>
-      </select>
-    `
-    let nodeWithTools
-
-    beforeEach(() => {
-      nodeWithTools = withTools(node)
-    })
-
-    it('should return the raw node without any tool', () => {
-      expect(nodeWithTools.getRawNode()).toEqual(node)
-    })
-
-    it('should return the text content of the node', () => {
-      expect(nodeWithTools.getText()).toBe(node.textContent)
-    })
-
-    it('should return the value of the node', () => {
-      expect(nodeWithTools.getValue()).toBe(node.value)
-    })
-  })
-
   describe('unmounting a node', () => {
     const node = `<div>a simple node</div>`
 
