@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { Portal } from './Portal'
-import { mount } from '../mount'
+import { mount, unmount } from '../mounting'
 import { withTools } from '../../../src'
 
 describe('portal', () => {
@@ -14,6 +14,6 @@ describe('portal', () => {
     expect(portal).toBeRendered()
     expect(portal).not.toHaveText(childrenText)
     expect(portalRoot).toHaveText(childrenText)
-    portal.unmount()
+    unmount()
   })
 })

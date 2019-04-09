@@ -1,4 +1,4 @@
-import { mount } from './mount.util'
+import { mount, unmount } from './mounting.util'
 
 describe('withQueries', () => {
   const node = `
@@ -21,9 +21,7 @@ describe('withQueries', () => {
     nodeMountedWithTools = mount(node)
   })
 
-  afterEach(() => {
-    nodeMountedWithTools.unmount()
-  })
+  afterEach(unmount)
 
   it('should get a node by its text', () => {
     expect(nodeMountedWithTools.getByText('a text')).toBeRendered()

@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { CartWithAsyncRender as Cart } from './CartWithAsyncRender'
-import { mount } from '../mount'
+import { mount, unmount } from '../mounting'
 
 describe('cart with async render', () => {
   let cart
@@ -10,9 +10,7 @@ describe('cart with async render', () => {
     cart = mount(<Cart />)
   })
 
-  afterEach(() => {
-    cart.unmount()
-  })
+  afterEach(unmount)
 
   it('should stop loading as soon as it gets the products', () => {
     expect(cart.getByText('loading')).toBeRendered()

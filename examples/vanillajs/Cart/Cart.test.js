@@ -1,5 +1,5 @@
 import { Cart } from './Cart'
-import { mount } from '../mount'
+import { mount, unmount } from '../mounting'
 
 describe('cart', () => {
   let cart
@@ -8,9 +8,7 @@ describe('cart', () => {
     cart = mount(Cart)
   })
 
-  afterEach(() => {
-    cart.unmount()
-  })
+  afterEach(unmount)
 
   it('can have default products', () => {
     expect(cart.getByDataTest('products')).toHaveText('10')

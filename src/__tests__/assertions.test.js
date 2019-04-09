@@ -1,4 +1,4 @@
-import { mount } from './mount.util'
+import { mount, unmount } from './mounting.util'
 import { assertions } from '../assertions'
 
 describe('assertions can be used to extend jest', () => {
@@ -13,16 +13,17 @@ describe('assertions can be used to extend jest', () => {
     `)
   })
 
+  afterEach(unmount)
+
   it('should check that is rendered', () => {
     const { message, pass } = assertions.toBeRendered(nodeMountedWithTools)
 
     expect(message()).toBe('expected node not to be rendered')
     expect(pass).toBeTruthy()
-    nodeMountedWithTools.unmount()
   })
 
   it('should check that is not rendered', () => {
-    nodeMountedWithTools.unmount()
+    unmount()
     const { message, pass } = assertions.toBeRendered(nodeMountedWithTools)
 
     expect(message()).toBe('expected node to be rendered')
@@ -35,7 +36,6 @@ describe('assertions can be used to extend jest', () => {
 
     expect(message()).toBe(`expected node not to have text "${ text }" but actually does`)
     expect(pass).toBeTruthy()
-    nodeMountedWithTools.unmount()
   })
 
   it('should check that does not have text', () => {
@@ -45,7 +45,6 @@ describe('assertions can be used to extend jest', () => {
 
     expect(message()).toBe(`expected node to have text "${ aNotFoundText }" but instead has "${ text }"`)
     expect(pass).toBeFalsy()
-    nodeMountedWithTools.unmount()
   })
 
   it('should check that is disabled', () => {
@@ -53,7 +52,6 @@ describe('assertions can be used to extend jest', () => {
 
     expect(message()).toBe('expected node not to be disabled')
     expect(pass).toBeTruthy()
-    nodeMountedWithTools.unmount()
   })
 
   it('should check that is not disabled', () => {
@@ -61,7 +59,6 @@ describe('assertions can be used to extend jest', () => {
 
     expect(message()).toBe('expected node to be disabled')
     expect(pass).toBeFalsy()
-    nodeMountedWithTools.unmount()
   })
 
   it('should check that has value', () => {
@@ -71,7 +68,6 @@ describe('assertions can be used to extend jest', () => {
 
     expect(message()).toBe(`expected node not to have value "${ value }" but actually does`)
     expect(pass).toBeTruthy()
-    nodeMountedWithTools.unmount()
   })
 
   it('should check that does not have value', () => {
@@ -82,6 +78,5 @@ describe('assertions can be used to extend jest', () => {
 
     expect(message()).toBe(`expected node to have value "${ aNotFoundValue }" but instead has "${ value }"`)
     expect(pass).toBeFalsy()
-    nodeMountedWithTools.unmount()
   })
 })

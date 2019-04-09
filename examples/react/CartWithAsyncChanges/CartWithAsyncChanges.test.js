@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { CartWithAsyncChanges as Cart } from './CartWithAsyncChanges'
-import { mount } from '../mount'
+import { mount, unmount } from '../mounting'
 
 describe('cart with async changes', () => {
   let cart
@@ -10,9 +10,7 @@ describe('cart with async changes', () => {
     cart = mount(<Cart />)
   })
 
-  afterEach(() => {
-    cart.unmount()
-  })
+  afterEach(unmount)
 
   it('can have default products', () => {
     expect(cart.getByDataTest('products')).toHaveText('0')

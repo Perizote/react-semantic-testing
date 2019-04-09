@@ -1,4 +1,4 @@
-import { mount } from './mount.util'
+import { mount, unmount } from './mounting.util'
 
 describe('withMutations', () => {
   const initialText = 'an initial text'
@@ -9,9 +9,7 @@ describe('withMutations', () => {
     mountedNodeWithTools = mount(node)
   })
 
-  afterEach(() => {
-    mountedNodeWithTools.unmount()
-  })
+  afterEach(unmount)
 
   async function testThatObserverThrowsError(observerName, errorMessage) {
     jest.useFakeTimers()
