@@ -11,6 +11,8 @@ describe('withEvents', () => {
     { eventName: 'blur', eventType: 'blur', nodeType: 'input' },
     { eventName: 'wheel', eventType: 'wheel', nodeType: 'div' },
     { eventName: 'scroll', eventType: 'scroll', nodeType: 'div' },
+    { eventName: 'keyPress', eventType: 'keypress', nodeType: 'input' },
+    { eventName: 'keyDown', eventType: 'keydown', nodeType: 'input' },
   ]
 
   function testEventType({ eventName, eventType, nodeType }) {
@@ -45,5 +47,17 @@ describe('withEvents', () => {
 
     expect(() => withTools(node).change({ target: { value: 'just a value' } }))
       .toThrow('Element cannot have value property')
+  })
+
+  it('should specify a different key', () => {
+    const eventCallback = jest.fn()
+    const node = document.createElement('input')
+    const key = 'a'
+    node.addEventListener('keypress', eventCallback)
+
+    withTools(node).keyPress({ key })
+
+    expect(eventCallback).toHaveBeenCalledTimes(1)
+    expect(eventCallback).toHaveBeenCalledWith(expect.objectContaining({ key }))
   })
 })

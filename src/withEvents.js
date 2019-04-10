@@ -1,13 +1,15 @@
 const EVENT_TYPES = {
-  click: { type: 'click', init: { bubbles: true, cancelable: true, button: 0 } },
-  submit: { type: 'submit', init: { bubbles: true, cancelable: true } },
-  change: { type: 'change', init: { bubbles: true } },
-  mouseEnter: { type: 'mouseenter', init: { bubbles: true, cancelable: true } },
-  mouseLeave: { type: 'mouseleave', init: { bubbles: true, cancelable: true } },
-  focus: { type: 'focus', init: { bubbles: true } },
-  blur: { type: 'blur' },
-  wheel: { type: 'wheel', init: { bubbles: true, cancelable: true } },
-  scroll: { type: 'scroll' },
+  click: { interface: 'MouseEvent', type: 'click', init: { bubbles: true, cancelable: true, button: 0 } },
+  submit: { interface: 'Event', type: 'submit', init: { bubbles: true, cancelable: true } },
+  change: { interface: 'InputEvent', type: 'change', init: { bubbles: true } },
+  mouseEnter: { interface: 'MouseEvent', type: 'mouseenter', init: { bubbles: true, cancelable: true } },
+  mouseLeave: { interface: 'MouseEvent', type: 'mouseleave', init: { bubbles: true, cancelable: true } },
+  focus: { interface: 'FocusEvent', type: 'focus', init: { bubbles: true } },
+  blur: { interface: 'FocusEvent', type: 'blur' },
+  wheel: { interface: 'WheelEvent', type: 'wheel', init: { bubbles: true, cancelable: true } },
+  scroll: { interface: 'UIEvent', type: 'scroll' },
+  keyPress: { interface: 'KeyboardEvent', type: 'keypress', init: { bubbles: true, cancelable: true } },
+  keyDown: { interface: 'KeyboardEvent', type: 'keydown', init: { bubbles: true, cancelable: true } },
 }
 
 function withEvents(node) {
@@ -27,13 +29,13 @@ const getEventNormalizer = node => (dispatchableEvents, eventName) => {
         setNativeValue(node, value)
       }
 
-      return dispatchEvent(node, event.type, eventInit)
+      return dispatchEvent(node, event.type, event.interface, eventInit)
     },
   }
 }
 
-function dispatchEvent(node, type, init = {}) {
-  const WindowEvent = document.defaultView.Event
+function dispatchEvent(node, type, eventInterface, init = {}) {
+  const WindowEvent = document.defaultView[eventInterface] || document.defaultView.Event
   const event = new WindowEvent(type, init)
   node.dispatchEvent(event)
 }
