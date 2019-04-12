@@ -3,6 +3,8 @@ import { render, unmountComponentAtNode } from 'react-dom'
 import { act } from 'react-dom/test-utils'
 import { createStore } from 'redux'
 import { Provider } from 'react-redux'
+import { Router } from 'react-router-dom'
+import { createMemoryHistory } from 'history'
 
 import { withTools } from 'dom-test-tools'
 
@@ -16,7 +18,12 @@ function mount(component) {
     render(component, rootNode)
   })
 
-  return withTools(rootNode)
+  return {
+    ...withTools(rootNode),
+    getRootNode() {
+      return withTools(rootNode)
+    },
+  }
 }
 
 function mountWithRedux(component, { initialState, reducer } = {}) {
@@ -26,6 +33,16 @@ function mountWithRedux(component, { initialState, reducer } = {}) {
     <Provider store={ store }>
       { component }
     </Provider>
+  )
+}
+
+function mountWithRouter(component, { route = '/', initialEntries } = {}) {
+  const history = createMemoryHistory({ initialEntries: [route] })
+
+  return mount(
+    <Router history={ history }>
+      { component }
+    </Router>
   )
 }
 
@@ -40,4 +57,4 @@ function unmount() {
   })
 }
 
-export { mount, mountWithRedux, unmount }
+export { mount, mountWithRedux, mountWithRouter, unmount }
