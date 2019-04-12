@@ -1,4 +1,8 @@
+import React from 'react'
 import { render, unmountComponentAtNode } from 'react-dom'
+import { act } from 'react-dom/test-utils'
+import { createStore } from 'redux'
+import { Provider } from 'react-redux'
 
 import { withTools } from '../../src'
 
@@ -8,9 +12,21 @@ function mount(component) {
   const rootNode = document.body.appendChild(document.createElement('div'))
   mountedComponents.add(rootNode)
 
-  render(component, rootNode)
+  act(() => {
+    render(component, rootNode)
+  })
 
   return withTools(rootNode)
+}
+
+function mountWithRedux(component, { initialState, reducer } = {}) {
+  const store = createStore(reducer, initialState)
+
+  return mount(
+    <Provider store={ store }>
+      { component }
+    </Provider>
+  )
 }
 
 function unmount() {
@@ -24,4 +40,4 @@ function unmount() {
   })
 }
 
-export { mount, unmount }
+export { mount, mountWithRedux, unmount }
