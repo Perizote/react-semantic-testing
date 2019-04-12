@@ -1,4 +1,4 @@
-import { withTools } from '../../src'
+import { withTools } from 'dom-test-tools'
 
 const mountedComponents = new Set()
 

@@ -5,5 +5,8 @@
     "<rootDir>/**/?(*.)(test).js?(x)"
   ],
   "moduleFileExtensions": ["js"],
+  "moduleNameMapper": {
+    "dom-test-tools": "<rootDir>/src"
+  },
   "setupFilesAfterEnv": ["<rootDir>/config/setup.js"]
 }

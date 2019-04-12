@@ -17,7 +17,7 @@ class CartWithRedux extends Component {
     this.props.remove()
   }
 
-  render() {
+  render = () => {
     return (
       <div data-test="cart">
         <button data-test="remove" onClick={ this.remove }>-</button>

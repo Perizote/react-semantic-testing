@@ -23,7 +23,7 @@ export class CartWithAsyncChanges extends Component {
     this.setState({ products: this.state.products - 1 })
   }
 
-  render() {
+  render = () => {
     return (
       <div data-test="cart">
         <button data-test="remove" onClick={ this.remove }>-</button>

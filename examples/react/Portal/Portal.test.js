@@ -2,7 +2,7 @@ import React from 'react'
 
 import { Portal } from './Portal'
 import { mount, unmount } from '../mounting'
-import { withTools } from '../../../src'
+import { withTools } from 'dom-test-tools'
 
 describe('portal', () => {
   it('should render content in a different location', () => {

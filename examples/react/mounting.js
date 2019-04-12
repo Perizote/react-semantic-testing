@@ -4,7 +4,7 @@ import { act } from 'react-dom/test-utils'
 import { createStore } from 'redux'
 import { Provider } from 'react-redux'
 
-import { withTools } from '../../src'
+import { withTools } from 'dom-test-tools'
 
 const mountedComponents = new Set()
 
