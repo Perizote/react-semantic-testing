@@ -1,9 +1,9 @@
 const Cart = node => {
   node.innerHTML = `
-    <div id="cart" data-test="cart">
-      <button id="remove" data-test="remove">-</button>
+    <div id="cart">
+      <button id="remove">-</button>
       <span id="products" data-test="products">10</span>
-      <button id="add" data-test="add">+</button>
+      <button id="add">+</button>
     </div>
   `
 

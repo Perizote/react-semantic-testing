@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, Fragment } from 'react'
 
 function useProducts(initialProducts) {
   const [ products, setProducts ] = useState(initialProducts)
@@ -13,11 +13,11 @@ const CartWithHooks = () => {
   const [ products, add, remove ] = useProducts(10)
 
   return (
-    <div data-test="cart">
-      <button data-test="remove" onClick={ remove }>-</button>
+    <Fragment>
+      <button onClick={ remove }>-</button>
       <span data-test="products">{ products }</span>
-      <button data-test="add" onClick={ add }>+</button>
-    </div>
+      <button onClick={ add }>+</button>
+    </Fragment>
   )
 }
 

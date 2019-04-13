@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 
 export class CartWithAsyncRender extends Component {
   state = {
@@ -29,11 +29,11 @@ export class CartWithAsyncRender extends Component {
     if (isLoading) { return <span>loading</span> }
 
     return (
-      <div data-test="cart">
-        <button data-test="remove" onClick={ this.remove }>-</button>
+      <Fragment>
+        <button onClick={ this.remove }>-</button>
         <span data-test="products">{ products }</span>
-        <button data-test="add" onClick={ this.add }>+</button>
-      </div>
+        <button onClick={ this.add }>+</button>
+      </Fragment>
     )
   }
 }

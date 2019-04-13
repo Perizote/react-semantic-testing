@@ -19,13 +19,13 @@ describe('cart with async changes', () => {
   })
 
   it('can add a product', async () => {
-    (await cart.waitUntilItChanges()).getByDataTest('add').click()
+    (await cart.waitUntilItChanges()).getByText('+').click()
 
     expect(cart.getByDataTest('products')).toHaveText('11')
   })
 
   it('can remove a product', async () => {
-    (await cart.waitUntilItChanges()).getByDataTest('remove').click()
+    (await cart.waitUntilItChanges()).getByText('-').click()
 
     expect(cart.getByDataTest('products')).toHaveText('9')
   })

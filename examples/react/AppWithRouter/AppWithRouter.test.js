@@ -10,7 +10,7 @@ describe('app with router', () => {
   it('should be at home page', () => {
     const app = mountWithRouter(<AppWithRouter />)
 
-    expect(app).toHaveText(/wellcome to mercadona online/i)
+    expect(app).toHaveText(/wellcome to shopping online/i)
   })
 
   it('should navigate to my products page', () => {

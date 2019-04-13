@@ -22,13 +22,13 @@ describe('cart with async render', () => {
   })
 
   it('can add a product', async () => {
-    (await cart.getByDataTest('add').waitUntilItAppears()).click()
+    (await cart.getByText('+').waitUntilItAppears()).click()
 
     expect(cart.getByDataTest('products')).toHaveText('11')
   })
 
   it('can remove a product', async () => {
-    (await cart.getByDataTest('remove').waitUntilItAppears()).click()
+    (await cart.getByText('-').waitUntilItAppears()).click()
 
     expect(cart.getByDataTest('products')).toHaveText('9')
   })

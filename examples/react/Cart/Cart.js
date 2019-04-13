@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 
 export class Cart extends Component {
   state = {
@@ -15,11 +15,11 @@ export class Cart extends Component {
 
   render = () => {
     return (
-      <div data-test="cart">
-        <button data-test="remove" onClick={ this.remove }>-</button>
+      <Fragment>
+        <button onClick={ this.remove }>-</button>
         <span data-test="products">{ this.state.products }</span>
-        <button data-test="add" onClick={ this.add }>+</button>
-      </div>
+        <button onClick={ this.add }>+</button>
+      </Fragment>
     )
   }
 }

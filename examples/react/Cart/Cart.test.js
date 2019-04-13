@@ -17,13 +17,13 @@ describe('cart', () => {
   })
 
   it('can add a product', () => {
-    cart.getByDataTest('add').click()
+    cart.getByText('+').click()
 
     expect(cart.getByDataTest('products')).toHaveText('11')
   })
 
   it('can remove a product', () => {
-    cart.getByDataTest('remove').click()
+    cart.getByText('-').click()
 
     expect(cart.getByDataTest('products')).toHaveText('9')
   })
