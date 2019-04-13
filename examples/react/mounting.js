@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { createContext } from 'react'
 import { render, unmountComponentAtNode } from 'react-dom'
 import { act } from 'react-dom/test-utils'
 import { createStore } from 'redux'
@@ -18,12 +18,7 @@ function mount(component) {
     render(component, rootNode)
   })
 
-  return {
-    ...withTools(rootNode),
-    getRootNode() {
-      return withTools(rootNode)
-    },
-  }
+  return withTools(rootNode)
 }
 
 function mountWithRedux(component, { initialState, reducer } = {}) {
@@ -46,6 +41,37 @@ function mountWithRouter(component, { route = '/', initialEntries } = {}) {
   )
 }
 
+function mountWithContext(
+  component,
+  { defaultValue, value = defaultValue, useProvider = true, useConsumer = true } = {}
+) {
+  const { Provider, Consumer } = createContext(defaultValue)
+
+  if (!useProvider) {
+    return mount(
+      <Consumer>
+        { component }
+      </Consumer>
+    )
+  }
+
+  if (!useConsumer) {
+    return mount(
+      <Provider value={ value }>
+        { component }
+      </Provider>
+    )
+  }
+
+  return mount(
+    <Provider value={ value }>
+      <Consumer>
+        { component }
+      </Consumer>
+    </Provider>
+  )
+}
+
 function unmount() {
   mountedComponents.forEach(component => {
     if (document.body.contains(component)) {
@@ -57,4 +83,4 @@ function unmount() {
   })
 }
 
-export { mount, mountWithRedux, mountWithRouter, unmount }
+export { mount, mountWithRedux, mountWithRouter, mountWithContext, unmount }
