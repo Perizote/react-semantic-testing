@@ -34,7 +34,7 @@ const withTools = (node) => ({
   ...withQueries(node),
 })
 
-function withMutations (node) {
+function withMutations(node) {
   return {
     async waitUntilItChanges() {
       const onChange = () => withTools(node)

@@ -16,11 +16,11 @@ export class CartWithAsyncChanges extends Component {
   }
 
   add = () => {
-    this.setState({ products: this.state.products + 1 })
+    this.setState(({ products }) => ({ products: products + 1 }))
   }
 
   remove = () => {
-    this.setState({ products: this.state.products - 1 })
+    this.setState(({ products }) => ({ products: products - 1 }))
   }
 
   render = () => {

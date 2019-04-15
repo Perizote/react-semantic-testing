@@ -6,9 +6,56 @@ import { Provider } from 'react-redux'
 import { Router } from 'react-router-dom'
 import { createMemoryHistory } from 'history'
 
-import { withTools } from 'dom-test-tools'
+import { withEvents, withQueries, withHelpers, withMutations } from 'dom-test-tools'
 
 const mountedComponents = new Set()
+
+function withExtendedToolsForReact(node) {
+  return {
+    ...extendEvents(withEvents(node)),
+    ...withQueries(node),
+    ...withHelpers(node),
+    ...extendMutations(withMutations(node)),
+  }
+}
+
+const extendEvents = events => {
+  return Object.keys(events).reduce((accEvents, eventName) => {
+    const event = events[eventName]
+
+    return {
+      ...accEvents,
+      [eventName]: (...args) => {
+        let result
+
+        act(() => {
+          result = event(...args)
+        })
+
+        return result
+      },
+    }
+  }, {})
+}
+
+const extendMutations = mutations => {
+  return Object.keys(mutations).reduce((accMutations, mutationName) => {
+    const mutation = mutations[mutationName]
+
+    return {
+      ...accMutations,
+      [mutationName]: async (...args) => {
+        let result
+
+        await act(async () => {
+          result = await mutation(...args)
+        })
+
+        return result
+      },
+    }
+  }, {})
+}
 
 function mount(component) {
   const rootNode = document.body.appendChild(document.createElement('div'))
@@ -18,7 +65,7 @@ function mount(component) {
     render(component, rootNode)
   })
 
-  return withTools(rootNode)
+  return withExtendedToolsForReact(rootNode)
 }
 
 function mountWithRedux(component, { initialState, reducer } = {}) {

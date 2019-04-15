@@ -1,2 +1,6 @@
 export { withTools } from './withTools'
+export { withEvents } from './withEvents'
+export { withQueries } from './withQueries'
+export { withHelpers } from './withHelpers'
+export { withMutations } from './withMutations'
 export { assertions } from './assertions'
