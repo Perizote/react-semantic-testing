@@ -1,5 +1,3 @@
-import { act } from 'react-dom/test-utils'
-
 const EVENT_TYPES = {
   click: { interface: 'MouseEvent', type: 'click', init: { bubbles: true, cancelable: true, button: 0 } },
   submit: { interface: 'Event', type: 'submit', init: { bubbles: true, cancelable: true } },
@@ -39,11 +37,8 @@ const getEventNormalizer = node => (dispatchableEvents, eventName) => {
 function dispatchEvent(node, type, eventInterface, init = {}) {
   const WindowEvent = document.defaultView[eventInterface] || document.defaultView.Event
   const event = new WindowEvent(type, init)
-  let result
-  act(() => {
-    result = node.dispatchEvent(event)
-  })
-  return result
+
+  return node.dispatchEvent(event)
 }
 
 function setNativeValue(node, value) {
