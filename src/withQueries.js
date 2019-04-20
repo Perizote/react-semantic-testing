@@ -9,14 +9,14 @@ const setAsLastQuery = query => lastQuery = query
 
 const getLastQuery = () => lastQuery()
 
-const withTools = (node) => ({
+const withTools = node => ({
   ...withEvents(node),
   ...withHelpers(node),
   ...withMutations(node),
 })
 
 function withQueries(node) {
-  const getTextComparator = text => node => {
+  const getLabelComparator = text => node => {
     return compareText(text, getTextFromNode(node))
   }
 
@@ -27,6 +27,14 @@ function withQueries(node) {
       .filter(isTextNode)
       .map(({ textContent }) => textContent)
       .join('')
+  }
+
+  const getTextComparator = text => node => {
+    const ariaLabel = node.getAttribute('aria-label')
+    if (Boolean(ariaLabel)) {
+      return compareText(text, ariaLabel)
+    }
+    return compareText(text, getTextFromNode(node))
   }
 
   return {
@@ -41,7 +49,9 @@ function withQueries(node) {
       return query()
     },
     getByText(text) {
-      const query = () => withTools([ ...node.querySelectorAll('*') ].find(getTextComparator(text)))
+      const query = () => withTools(
+        [ ...node.querySelectorAll('*') ].find(getTextComparator(text))
+      )
       setAsLastQuery(query)
       return query()
     },
@@ -52,19 +62,9 @@ function withQueries(node) {
     },
     getByLabelText(labelText) {
       const query = () => {
-        const { control: input } = [ ...node.querySelectorAll('label') ].find(getTextComparator(labelText)) || {}
+        const { control: input } = [ ...node.querySelectorAll('label') ].find(getLabelComparator(labelText)) || {}
         return withTools(input)
       }
-      setAsLastQuery(query)
-      return query()
-    },
-    getByAriaLabel(ariaLabel) {
-      const query = () => withTools(node.querySelector(`[aria-label="${ ariaLabel }"]`))
-      setAsLastQuery(query)
-      return query()
-    },
-    getAllByAriaLabel(ariaLabel) {
-      const query = () => [ ...node.querySelectorAll(`[aria-label="${ ariaLabel }"]`) ].map(withTools)
       setAsLastQuery(query)
       return query()
     },

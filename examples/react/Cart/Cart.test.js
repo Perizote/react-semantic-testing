@@ -17,7 +17,7 @@ describe('cart', () => {
   })
 
   it('can add a product', () => {
-    cart.getByText('+').click()
+    cart.getByText('add').click()
 
     expect(cart.getByDataTest('products')).toHaveText('11')
   })

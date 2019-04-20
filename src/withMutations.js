@@ -28,7 +28,7 @@ async function createMutationObserver(callback, { timeout = 3000, node, error } 
   })
 }
 
-const withTools = (node) => ({
+const withTools = node => ({
   ...withEvents(node),
   ...withHelpers(node),
   ...withQueries(node),

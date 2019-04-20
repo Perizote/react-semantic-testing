@@ -18,7 +18,7 @@ export class Cart extends Component {
       <Fragment>
         <button onClick={ this.remove }>-</button>
         <span data-test="products">{ this.state.products }</span>
-        <button onClick={ this.add }>+</button>
+        <button aria-label="add" onClick={ this.add }>+</button>
       </Fragment>
     )
   }

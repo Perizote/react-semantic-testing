@@ -4,6 +4,7 @@ describe('withQueries', () => {
   const node = `
     <div role="main">
       <p data-test="a-data-test">a text</p>
+      <button aria-label="an aria label">X</button>
       <label for="an-id">a label text</label>
       <input id="an-id" value="an input value" />
       <select>
@@ -26,11 +27,15 @@ describe('withQueries', () => {
   it('should get a node by its text', () => {
     expect(nodeMountedWithTools.getByText('a text')).toBeRendered()
     expect(nodeMountedWithTools.getByText(/A Text/i)).toBeRendered()
+    expect(nodeMountedWithTools.getByText('an aria label')).toBeRendered()
+    expect(nodeMountedWithTools.getByText(/An ARIA Label/i)).toBeRendered()
   })
 
   it('should get all nodes by its text', () => {
     expect(nodeMountedWithTools.getAllByText('a text')).toHaveLength(1)
     expect(nodeMountedWithTools.getAllByText(/^A Text$/i)).toHaveLength(1)
+    expect(nodeMountedWithTools.getAllByText('an aria label')).toHaveLength(1)
+    expect(nodeMountedWithTools.getAllByText(/An ARIA Label/i)).toHaveLength(1)
   })
 
   it('should get a form control by its label', () => {
