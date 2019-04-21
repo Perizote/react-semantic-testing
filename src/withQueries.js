@@ -37,6 +37,10 @@ function withQueries(node) {
     return compareText(text, getTextFromNode(node))
   }
 
+  const getAltTextComparator = altText => node => {
+    return compareText(altText, node.getAttribute('alt'))
+  }
+
   return {
     getByDataTest(dataTest) {
       const query = () => withTools(node.querySelector(`[data-test="${ dataTest }"]`))
@@ -69,12 +73,12 @@ function withQueries(node) {
       return query()
     },
     getByAltText(altText) {
-      const query = () => withTools(node.querySelector(`[alt="${ altText }"]`))
+      const query = () => withTools([ ...node.querySelectorAll('[alt]') ].find(getAltTextComparator(altText)))
       setAsLastQuery(query)
       return query()
     },
     getAllByAltText(altText) {
-      const query = () => [ ...node.querySelectorAll(`[alt="${ altText }"]`) ].map(withTools)
+      const query = () => [ ...node.querySelectorAll('[alt]') ].filter(getAltTextComparator(altText)).map(withTools)
       setAsLastQuery(query)
       return query()
     },
