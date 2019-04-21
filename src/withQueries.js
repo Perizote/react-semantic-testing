@@ -41,14 +41,18 @@ function withQueries(node) {
     return compareText(altText, node.getAttribute('alt'))
   }
 
+  const getDataTestComparator = dataTest => node => {
+    return compareText(dataTest, node.getAttribute('data-test'))
+  }
+
   return {
     getByDataTest(dataTest) {
-      const query = () => withTools(node.querySelector(`[data-test="${ dataTest }"]`))
+      const query = () => withTools([ ...node.querySelectorAll('[data-test]') ].find(getDataTestComparator(dataTest)))
       setAsLastQuery(query)
       return query()
     },
     getAllByDataTest(dataTest) {
-      const query = () => [ ...node.querySelectorAll(`[data-test="${ dataTest }"]`) ].map(withTools)
+      const query = () => [ ...node.querySelectorAll('[data-test]') ].filter(getDataTestComparator(dataTest)).map(withTools)
       setAsLastQuery(query)
       return query()
     },

@@ -65,9 +65,11 @@ describe('withQueries', () => {
 
   it('should get a node by its data-test', () => {
     expect(nodeMountedWithTools.getByDataTest('a-data-test')).toBeRendered()
+    expect(nodeMountedWithTools.getByDataTest(/a-DATA-TEST/i)).toBeRendered()
   })
 
   it('should get all nodes by its data-test', () => {
     expect(nodeMountedWithTools.getAllByDataTest('a-data-test')).toHaveLength(1)
+    expect(nodeMountedWithTools.getAllByDataTest(/a-DATA-TEST/i)).toHaveLength(1)
   })
 })
