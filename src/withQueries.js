@@ -15,48 +15,61 @@ const withTools = node => ({
   ...withMutations(node),
 })
 
+const ATTRIBUTES = {
+  ARIA_LABEL: 'aria-label',
+  DATA_TEST: 'data-test',
+  ALT: 'alt',
+  ROLE: 'role',
+}
+
+const getLabelComparator = text => node => {
+  return compareText(text, getTextFromNode(node))
+}
+
+const getTextFromNode = node => {
+  const isTextNode = ({ nodeType, textContent }) => nodeType === Node.TEXT_NODE && Boolean(textContent)
+
+  return [ ...node.childNodes]
+    .filter(isTextNode)
+    .map(({ textContent }) => textContent)
+    .join('')
+}
+
+const getTextComparator = text => node => {
+  const ariaLabel = node.getAttribute(ATTRIBUTES.ARIA_LABEL)
+  if (Boolean(ariaLabel)) {
+    return compareText(text, ariaLabel)
+  }
+  return compareText(text, getTextFromNode(node))
+}
+
+const getAttributeComparator = (attributeValue, attributeName) => node => {
+  return compareText(attributeValue, node.getAttribute(attributeName))
+}
+
+const getValueComparator = value => ({ options, value: nodeValue }) => {
+  if (Boolean(options)) {
+    const optionSelected = [ ...options ].find(option => option.selected)
+    return compareText(value, optionSelected.textContent)
+  }
+
+  return compareText(value, nodeValue)
+}
+
 function withQueries(node) {
-  const getLabelComparator = text => node => {
-    return compareText(text, getTextFromNode(node))
-  }
-
-  const getTextFromNode = node => {
-    const isTextNode = ({ nodeType, textContent }) => nodeType === Node.TEXT_NODE && Boolean(textContent)
-
-    return [ ...node.childNodes]
-      .filter(isTextNode)
-      .map(({ textContent }) => textContent)
-      .join('')
-  }
-
-  const getTextComparator = text => node => {
-    const ariaLabel = node.getAttribute('aria-label')
-    if (Boolean(ariaLabel)) {
-      return compareText(text, ariaLabel)
-    }
-    return compareText(text, getTextFromNode(node))
-  }
-
-  const getAltTextComparator = altText => node => {
-    return compareText(altText, node.getAttribute('alt'))
-  }
-
-  const getDataTestComparator = dataTest => node => {
-    return compareText(dataTest, node.getAttribute('data-test'))
-  }
-
-  const getRoleComparator = role => node => {
-    return compareText(role, node.getAttribute('role'))
-  }
-
   return {
     getByDataTest(dataTest) {
-      const query = () => withTools([ ...node.querySelectorAll('[data-test]') ].find(getDataTestComparator(dataTest)))
+      const query = () => withTools(
+        [ ...node.querySelectorAll(`[${ ATTRIBUTES.DATA_TEST }]`) ]
+          .find(getAttributeComparator(dataTest, ATTRIBUTES.DATA_TEST))
+      )
       setAsLastQuery(query)
       return query()
     },
     getAllByDataTest(dataTest) {
-      const query = () => [ ...node.querySelectorAll('[data-test]') ].filter(getDataTestComparator(dataTest)).map(withTools)
+      const query = () => [ ...node.querySelectorAll(`[${ ATTRIBUTES.DATA_TEST }]`) ]
+        .filter(getAttributeComparator(dataTest, ATTRIBUTES.DATA_TEST))
+        .map(withTools)
       setAsLastQuery(query)
       return query()
     },
@@ -79,30 +92,27 @@ function withQueries(node) {
       return query()
     },
     getByAltText(altText) {
-      const query = () => withTools([ ...node.querySelectorAll('[alt]') ].find(getAltTextComparator(altText)))
+      const query = () => withTools([ ...node.querySelectorAll(`[${ ATTRIBUTES.ALT }]`) ]
+        .find(getAttributeComparator(altText, ATTRIBUTES.ALT)))
       setAsLastQuery(query)
       return query()
     },
     getAllByAltText(altText) {
-      const query = () => [ ...node.querySelectorAll('[alt]') ].filter(getAltTextComparator(altText)).map(withTools)
+      const query = () => [ ...node.querySelectorAll(`[${ ATTRIBUTES.ALT }]`) ]
+        .filter(getAttributeComparator(altText, ATTRIBUTES.ALT))
+        .map(withTools)
       setAsLastQuery(query)
       return query()
     },
     getByRole(role) {
-      const query = () => withTools([ ...node.querySelectorAll('[role]') ].find(getRoleComparator(role)))
+      const query = () => withTools([ ...node.querySelectorAll(`[${ ATTRIBUTES.ROLE }]`) ]
+        .find(getAttributeComparator(role, ATTRIBUTES.ROLE)))
       setAsLastQuery(query)
       return query()
     },
     getByValue(value) {
       const query = () => withTools(
-        [ ...node.querySelectorAll('input, select, textarea') ].find(({ options, value: nodeValue }) => {
-          if (Boolean(options)) {
-            const optionSelected = [ ...options ].find(option => option.selected)
-            return compareText(value, optionSelected.textContent)
-          }
-
-          return compareText(value, nodeValue)
-        })
+        [ ...node.querySelectorAll('input, select, textarea') ].find(getValueComparator(value))
       )
       setAsLastQuery(query)
       return query()
