@@ -45,6 +45,7 @@ describe('withQueries', () => {
 
   it('should get a node by its role', () => {
     expect(nodeMountedWithTools.getByRole('button')).toBeRendered()
+    expect(nodeMountedWithTools.getByRole(/BuTTon/i)).toBeRendered()
   })
 
   it('should get a form control by its value', () => {

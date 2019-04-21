@@ -45,6 +45,10 @@ function withQueries(node) {
     return compareText(dataTest, node.getAttribute('data-test'))
   }
 
+  const getRoleComparator = role => node => {
+    return compareText(role, node.getAttribute('role'))
+  }
+
   return {
     getByDataTest(dataTest) {
       const query = () => withTools([ ...node.querySelectorAll('[data-test]') ].find(getDataTestComparator(dataTest)))
@@ -57,9 +61,7 @@ function withQueries(node) {
       return query()
     },
     getByText(text) {
-      const query = () => withTools(
-        [ ...node.querySelectorAll('*') ].find(getTextComparator(text))
-      )
+      const query = () => withTools([ ...node.querySelectorAll('*') ].find(getTextComparator(text)))
       setAsLastQuery(query)
       return query()
     },
@@ -87,7 +89,7 @@ function withQueries(node) {
       return query()
     },
     getByRole(role) {
-      const query = () => withTools(node.querySelector(`[role="${ role }"]`))
+      const query = () => withTools([ ...node.querySelectorAll('[role]') ].find(getRoleComparator(role)))
       setAsLastQuery(query)
       return query()
     },
