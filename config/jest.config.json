@@ -4,9 +4,9 @@
     "<rootDir>/**/__tests__/?(*.)(test).{js}",
     "<rootDir>/**/?(*.)(test).js?(x)"
   ],
-  "moduleFileExtensions": ["js"],
+  "moduleFileExtensions": ["js", "json"],
   "moduleNameMapper": {
-    "dom-test-tools": "<rootDir>/src"
+    "^aguacatest$": "<rootDir>/src"
   },
   "setupFilesAfterEnv": ["<rootDir>/config/setup.js"]
 }

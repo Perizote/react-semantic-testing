@@ -1,4 +1,4 @@
-import { withTools } from 'dom-test-tools'
+import { withTools } from 'aguacatest'
 
 const mountedComponents = new Set()
 

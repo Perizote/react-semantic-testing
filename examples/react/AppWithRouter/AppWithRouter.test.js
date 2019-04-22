@@ -2,7 +2,6 @@ import React from 'react'
 
 import { AppWithRouter } from './AppWithRouter'
 import { mountWithRouter, unmount } from '../mounting'
-import { withTools } from 'dom-test-tools'
 
 describe('app with router', () => {
   afterEach(unmount)
