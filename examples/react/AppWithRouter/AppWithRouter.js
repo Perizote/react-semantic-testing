@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react'
 import { withRouter } from 'react-router'
-import { Link, Route, Router, Switch } from 'react-router-dom'
+import { Link, Route, Switch } from 'react-router-dom'
 
 const ComponentWithRouter = withRouter(({ location: { pathname } }) => (
   <h1 data-test="with-router">You are now at { pathname }</h1>

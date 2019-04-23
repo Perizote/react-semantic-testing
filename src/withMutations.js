@@ -46,11 +46,15 @@ function withMutations(node) {
     },
     async waitUntilItAppears() {
       const onRender = () => {
-        const renderedNode = lastQuery().getRawNode()
+        const renderedNodes = lastQuery()
 
-        if (!renderedNode) { return }
+        if (renderedNodes.length > 0) {
+          return renderedNodes
+        }
 
-        return withTools(renderedNode)
+        if (!renderedNodes.getRawNode()) { return }
+
+        return renderedNodes
       }
 
       return createMutationObserver(onRender, {

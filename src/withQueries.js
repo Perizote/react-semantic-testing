@@ -56,6 +56,14 @@ const getValueComparator = value => ({ options, value: nodeValue }) => {
   return compareText(value, nodeValue)
 }
 
+const buildQueryForLists = listOfFoundNodes => {
+  if (listOfFoundNodes.length === 0){
+    return withTools([])
+  }
+
+  return listOfFoundNodes.map(withTools)
+}
+
 function withQueries(node) {
   return {
     getByDataTest(dataTest) {
@@ -67,9 +75,10 @@ function withQueries(node) {
       return query()
     },
     getAllByDataTest(dataTest) {
-      const query = () => [ ...node.querySelectorAll(`[${ ATTRIBUTES.DATA_TEST }]`) ]
-        .filter(getAttributeComparator(dataTest, ATTRIBUTES.DATA_TEST))
-        .map(withTools)
+      const query = () => buildQueryForLists(
+        [ ...node.querySelectorAll(`[${ ATTRIBUTES.DATA_TEST }]`) ]
+          .filter(getAttributeComparator(dataTest, ATTRIBUTES.DATA_TEST))
+      )
       setAsLastQuery(query)
       return query()
     },
@@ -79,7 +88,7 @@ function withQueries(node) {
       return query()
     },
     getAllByText(text) {
-      const query = () => [ ...node.querySelectorAll('*') ].filter(getTextComparator(text)).map(withTools)
+      const query = () => buildQueryForLists([ ...node.querySelectorAll('*') ].filter(getTextComparator(text)))
       setAsLastQuery(query)
       return query()
     },
@@ -98,9 +107,10 @@ function withQueries(node) {
       return query()
     },
     getAllByAltText(altText) {
-      const query = () => [ ...node.querySelectorAll(`[${ ATTRIBUTES.ALT }]`) ]
-        .filter(getAttributeComparator(altText, ATTRIBUTES.ALT))
-        .map(withTools)
+      const query = () => buildQueryForLists(
+        [ ...node.querySelectorAll(`[${ ATTRIBUTES.ALT }]`) ]
+          .filter(getAttributeComparator(altText, ATTRIBUTES.ALT))
+      )
       setAsLastQuery(query)
       return query()
     },
