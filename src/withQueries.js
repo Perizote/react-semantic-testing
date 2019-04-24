@@ -40,6 +40,10 @@ const getTextComparator = text => node => {
   if (Boolean(ariaLabel)) {
     return compareText(text, ariaLabel)
   }
+  const alt = node.getAttribute(ATTRIBUTES.ALT)
+  if (Boolean(alt)) {
+    return compareText(text, alt)
+  }
   return compareText(text, getTextFromNode(node))
 }
 
