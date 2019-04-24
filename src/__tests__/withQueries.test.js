@@ -55,13 +55,13 @@ describe('withQueries', () => {
   })
 
   it('should get a node by its alt text', () => {
-    expect(nodeMountedWithTools.getByAltText('an alt text')).toBeRendered()
-    expect(nodeMountedWithTools.getByAltText(/An ALT Text/i)).toBeRendered()
+    expect(nodeMountedWithTools.getByText('an alt text')).toBeRendered()
+    expect(nodeMountedWithTools.getByText(/An ALT Text/i)).toBeRendered()
   })
 
   it('should get all nodes by its alt text', () => {
-    expect(nodeMountedWithTools.getAllByAltText('an alt text')).toHaveLength(1)
-    expect(nodeMountedWithTools.getAllByAltText(/An ALT Text/i)).toHaveLength(1)
+    expect(nodeMountedWithTools.getAllByText('an alt text')).toHaveLength(1)
+    expect(nodeMountedWithTools.getAllByText(/An ALT Text/i)).toHaveLength(1)
   })
 
   it('should get a node by its data-test', () => {

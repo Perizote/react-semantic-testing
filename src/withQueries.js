@@ -104,20 +104,6 @@ function withQueries(node) {
       setAsLastQuery(query)
       return query()
     },
-    getByAltText(altText) {
-      const query = () => withTools([ ...node.querySelectorAll(`[${ ATTRIBUTES.ALT }]`) ]
-        .find(getAttributeComparator(altText, ATTRIBUTES.ALT)))
-      setAsLastQuery(query)
-      return query()
-    },
-    getAllByAltText(altText) {
-      const query = () => buildQueryForLists(
-        [ ...node.querySelectorAll(`[${ ATTRIBUTES.ALT }]`) ]
-          .filter(getAttributeComparator(altText, ATTRIBUTES.ALT))
-      )
-      setAsLastQuery(query)
-      return query()
-    },
     getByRole(role) {
       const query = () => withTools([ ...node.querySelectorAll(`[${ ATTRIBUTES.ROLE }]`) ]
         .find(getAttributeComparator(role, ATTRIBUTES.ROLE)))
