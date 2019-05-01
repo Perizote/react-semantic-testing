@@ -35,6 +35,11 @@ const assertions = {
       ? buildPassingMatcher(`expected node not to have value "${ value }" but actually does`)
       : buildFailingMatcher(`expected node to have value "${ value }" but instead has "${ node.getValue() }"`)
   },
+  toBeChecked(node) {
+    return node.getRawNode().checked
+      ? buildPassingMatcher('expected node not to be checked')
+      : buildFailingMatcher('expected node to be checked')
+  },
 }
 
 export { assertions }

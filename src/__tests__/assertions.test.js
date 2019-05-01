@@ -8,7 +8,7 @@ describe('assertions can be used to extend jest', () => {
     nodeMountedWithTools = mount(`
       <form>
         <label for="an id">a node</label>
-        <input id="an id" disabled value="a value" />
+        <input id="an id" disabled value="a value" checked />
       </form>
     `)
   })
@@ -77,6 +77,20 @@ describe('assertions can be used to extend jest', () => {
     const { message, pass } = assertions.toHaveValue(nodeMountedWithTools.getByLabelText(text), aNotFoundValue)
 
     expect(message()).toBe(`expected node to have value "${ aNotFoundValue }" but instead has "${ value }"`)
+    expect(pass).toBeFalsy()
+  })
+
+  it('should check that is checked', () => {
+    const { message, pass } = assertions.toBeChecked(nodeMountedWithTools.getByLabelText(/a node/))
+
+    expect(message()).toBe('expected node not to be checked')
+    expect(pass).toBeTruthy()
+  })
+
+  it('should check that is not checked', () => {
+    const { message, pass } = assertions.toBeChecked(nodeMountedWithTools.getByText(/a node/))
+
+    expect(message()).toBe('expected node to be checked')
     expect(pass).toBeFalsy()
   })
 })
