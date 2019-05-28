@@ -1,18 +1,14 @@
-import { compareText } from './compareText'
+import { compareText, getTextComparator, getMultipleTextComparator } from './utils'
 
-function buildPassingMatcher(message) {
-  return {
-    message: () => message,
-    pass: true,
-  }
-}
+const buildPassingMatcher = message => ({
+  message: () => message,
+  pass: true,
+})
 
-function buildFailingMatcher(message) {
-  return {
-    message: () => message,
-    pass: false,
-  }
-}
+const buildFailingMatcher = message => ({
+  message: () => message,
+  pass: false,
+})
 
 const assertions = {
   toBeRendered(node) {
@@ -21,7 +17,10 @@ const assertions = {
       : buildFailingMatcher('expected node to be rendered')
   },
   toHaveText(node, text) {
-    return compareText(text, node.getText())
+    const isInAChildNode = (text, node) => [ ...node.querySelectorAll('*') ].some(getMultipleTextComparator(text))
+    const isInCurrentNode = getTextComparator(text)
+
+    return isInCurrentNode(node.getRawNode()) || isInAChildNode(text, node.getRawNode())
       ? buildPassingMatcher(`expected node not to have text "${ text }" but actually does`)
       : buildFailingMatcher(`expected node to have text "${ text }" but instead has "${ node.getText().trim() }"`)
   },

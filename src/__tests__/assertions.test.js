@@ -6,10 +6,13 @@ describe('assertions can be used to extend jest', () => {
 
   beforeEach(() => {
     nodeMountedWithTools = mount(`
-      <form>
-        <label for="an id">a node</label>
-        <input id="an id" disabled value="a value" checked />
-      </form>
+      <div>
+        <form aria-label="an aria label">
+          <label for="an id">a node</label>
+          <input id="an id" disabled value="a value" checked />
+        </form>
+        <img src="../the/path" alt="an alt text" />
+      </div>
     `)
   })
 
@@ -35,6 +38,22 @@ describe('assertions can be used to extend jest', () => {
     const { message, pass } = assertions.toHaveText(nodeMountedWithTools, text)
 
     expect(message()).toBe(`expected node not to have text "${ text }" but actually does`)
+    expect(pass).toBeTruthy()
+  })
+
+  it('should check that has aria-label text', () => {
+    const ariaLabelText = /an aria label/
+    const { message, pass } = assertions.toHaveText(nodeMountedWithTools, ariaLabelText)
+
+    expect(message()).toBe(`expected node not to have text "${ ariaLabelText }" but actually does`)
+    expect(pass).toBeTruthy()
+  })
+
+  it('should check that has alt text', () => {
+    const altText = /an alt text/
+    const { message, pass } = assertions.toHaveText(nodeMountedWithTools, altText)
+
+    expect(message()).toBe(`expected node not to have text "${ altText }" but actually does`)
     expect(pass).toBeTruthy()
   })
 
