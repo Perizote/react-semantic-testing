@@ -67,7 +67,6 @@ const getValueComparator = value => ({ options, value: nodeValue }) => {
 export {
   DOM_ATTRIBUTES,
   DOM_TAGS,
-  compareText,
   getTextComparator,
   getMultipleTextComparator,
   getLabelComparator,

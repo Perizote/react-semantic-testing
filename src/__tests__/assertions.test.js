@@ -8,8 +8,12 @@ describe('assertions can be used to extend jest', () => {
     nodeMountedWithTools = mount(`
       <div>
         <form aria-label="an aria label">
-          <label for="an id">a node</label>
+          <label for="an id" data-test="label-data-test">a node</label>
           <input id="an id" disabled value="a value" checked />
+          <select data-test="a-select-data-test">
+            <option selected>a selected value</option>
+            <option>a no selected value</option>
+          </select>
         </form>
         <img src="../the/path" alt="an alt text" />
       </div>
@@ -58,9 +62,10 @@ describe('assertions can be used to extend jest', () => {
   })
 
   it('should check that does not have text', () => {
+    const dataTest = 'label-data-test'
     const text = 'a node'
     const aNotFoundText = 'a not found text'
-    const { message, pass } = assertions.toHaveText(nodeMountedWithTools, aNotFoundText)
+    const { message, pass } = assertions.toHaveText(nodeMountedWithTools.getByDataTest(dataTest), aNotFoundText)
 
     expect(message()).toBe(`expected node to have text "${ aNotFoundText }" but instead has "${ text }"`)
     expect(pass).toBeFalsy()
@@ -86,6 +91,15 @@ describe('assertions can be used to extend jest', () => {
     const { message, pass } = assertions.toHaveValue(nodeMountedWithTools.getByLabelText(text), value)
 
     expect(message()).toBe(`expected node not to have value "${ value }" but actually does`)
+    expect(pass).toBeTruthy()
+  })
+
+  it('should check that has selected value', () => {
+    const dataTest = 'a-select-data-test'
+    const selectedValue = 'a selected value'
+    const { message, pass } = assertions.toHaveValue(nodeMountedWithTools.getByDataTest(dataTest), selectedValue)
+
+    expect(message()).toBe(`expected node not to have value "${ selectedValue }" but actually does`)
     expect(pass).toBeTruthy()
   })
 

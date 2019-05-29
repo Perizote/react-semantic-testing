@@ -1,4 +1,4 @@
-import { compareText, getTextComparator, getMultipleTextComparator } from './utils'
+import { getTextComparator, getMultipleTextComparator, getValueComparator } from './utils'
 
 const buildPassingMatcher = message => ({
   message: () => message,
@@ -30,7 +30,9 @@ const assertions = {
       : buildFailingMatcher('expected node to be disabled')
   },
   toHaveValue(node, value) {
-    return compareText(value, node.getValue())
+    const isInCurrentNode = getValueComparator(value)
+
+    return isInCurrentNode(node.getRawNode())
       ? buildPassingMatcher(`expected node not to have value "${ value }" but actually does`)
       : buildFailingMatcher(`expected node to have value "${ value }" but instead has "${ node.getValue() }"`)
   },
