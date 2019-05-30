@@ -126,4 +126,23 @@ describe('assertions can be used to extend jest', () => {
     expect(message()).toBe('expected node to be checked')
     expect(pass).toBeFalsy()
   })
+
+  it('should check that has focus', () => {
+    const selectElement = nodeMountedWithTools.getByValue('a selected value')
+    selectElement.getRawNode().focus()
+
+    const { message, pass } = assertions.toHaveFocus(selectElement)
+
+    expect(message()).toBe('expected node not to have focus')
+    expect(pass).toBeTruthy()
+  })
+
+  it('should check that does not have focus', () => {
+    nodeMountedWithTools.getRawNode().focus()
+
+    const { message, pass } = assertions.toHaveFocus(nodeMountedWithTools.getByValue('a selected value'))
+
+    expect(message()).toBe('expected node to have focus')
+    expect(pass).toBeFalsy()
+  })
 })

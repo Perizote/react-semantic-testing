@@ -10,14 +10,12 @@ import { withEvents, withQueries, withHelpers, withMutations } from 'aguacatest'
 
 const mountedComponents = new Set()
 
-function withExtendedToolsForReact(node) {
-  return {
-    ...extendEvents(withEvents(node)),
-    ...withQueries(node),
-    ...withHelpers(node),
-    ...extendMutations(withMutations(node)),
-  }
-}
+const withExtendedToolsForReact = node => ({
+  ...extendEvents(withEvents(node)),
+  ...withQueries(node),
+  ...withHelpers(node),
+  ...extendMutations(withMutations(node)),
+})
 
 const extendEvents = events => {
   return Object.keys(events).reduce((accEvents, eventName) => {

@@ -41,6 +41,13 @@ const assertions = {
       ? buildPassingMatcher('expected node not to be checked')
       : buildFailingMatcher('expected node to be checked')
   },
+  toHaveFocus(node) {
+    const hasFocus = node.getRawNode().ownerDocument.activeElement === node.getRawNode()
+
+    return hasFocus
+      ? buildPassingMatcher('expected node not to have focus')
+      : buildFailingMatcher('expected node to have focus')
+  },
 }
 
 export { assertions }

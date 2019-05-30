@@ -4,7 +4,7 @@ const EVENT_TYPES = {
   change: { interface: 'InputEvent', type: 'change', init: { bubbles: true } },
   mouseEnter: { interface: 'MouseEvent', type: 'mouseenter', init: { bubbles: true, cancelable: true } },
   mouseLeave: { interface: 'MouseEvent', type: 'mouseleave', init: { bubbles: true, cancelable: true } },
-  focus: { interface: 'FocusEvent', type: 'focus', init: { bubbles: true } },
+  focus: { interface: 'FocusEvent', type: 'focus', init: { bubbles: false, cancelable: false } },
   blur: { interface: 'FocusEvent', type: 'blur' },
   wheel: { interface: 'WheelEvent', type: 'wheel', init: { bubbles: true, cancelable: true } },
   scroll: { interface: 'UIEvent', type: 'scroll' },
