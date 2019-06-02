@@ -10,7 +10,8 @@
 		"strict": true,
 		// Import non-ES modules as default imports.
     "esModuleInterop": true,
-    "declaration": true,
+		"declaration": true,
+		"outDir": "build"
 	},
 	"include": [
     "src/**/*",

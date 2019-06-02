@@ -8,7 +8,9 @@
     "test:watch": "jest --watch --config config/jest.config.json",
     "type-check": "tsc",
     "type-check:watch": "tsc --watch",
-    "build:types": "tsc --noEmit false --emitDeclarationOnly"
+    "build": "npm run build:types && npm run build:js",
+    "build:types": "tsc --noEmit false --emitDeclarationOnly",
+    "build:js": "babel src --extensions \".ts,.tsx\" --source-maps inline"
   },
   "keywords": [
     "testing",
@@ -35,6 +37,7 @@
     "react-dom": "^16.9.0-alpha.0"
   },
   "devDependencies": {
+    "@babel/cli": "^7.4.4",
     "@babel/core": "^7.3.3",
     "@types/jest": "^24.0.13",
     "@types/react": "^16.8.19",
