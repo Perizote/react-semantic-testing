@@ -2,10 +2,13 @@
   "name": "aguacatest",
   "version": "0.0.1",
   "description": "",
-  "main": "src/index.js",
+  "main": "src/index.s",
   "scripts": {
     "test": "jest --config config/jest.config.json",
-    "test:watch": "jest --watch --config config/jest.config.json"
+    "test:watch": "jest --watch --config config/jest.config.json",
+    "type-check": "tsc",
+    "type-check:watch": "tsc --watch",
+    "build:types": "tsc --noEmit false --emitDeclarationOnly"
   },
   "keywords": [
     "testing",
@@ -33,7 +36,16 @@
   },
   "devDependencies": {
     "@babel/core": "^7.3.3",
+    "@babel/plugin-proposal-class-properties": "^7.4.4",
+    "@babel/plugin-proposal-object-rest-spread": "^7.4.4",
     "@babel/preset-env": "^7.3.1",
+    "@babel/preset-typescript": "^7.3.3",
+    "@types/jest": "^24.0.13",
+    "@types/react": "^16.8.19",
+    "@types/react-dom": "^16.8.4",
+    "@types/react-redux": "^7.0.9",
+    "@types/react-router": "^5.0.1",
+    "@types/react-router-dom": "^4.3.3",
     "babel-jest": "^24.1.0",
     "babel-preset-react-app": "^7.0.1",
     "jest": "^24.1.0",
@@ -43,11 +55,18 @@
     "react-redux": "^7.0.1",
     "react-router": "^5.0.0",
     "react-router-dom": "^5.0.0",
-    "redux": "^4.0.1"
+    "redux": "^4.0.1",
+    "typescript": "^3.5.1"
   },
   "babel": {
     "presets": [
+      "@babel/preset-env",
+      "@babel/typescript",
       "react-app"
+    ],
+    "plugins": [
+      "@babel/proposal-class-properties",
+      "@babel/proposal-object-rest-spread"
     ]
   }
 }
