@@ -1,60 +1,122 @@
-const EVENT_TYPES = {
-  click: { interface: 'MouseEvent', type: 'click', init: { bubbles: true, cancelable: true, button: 0 } },
-  submit: { interface: 'Event', type: 'submit', init: { bubbles: true, cancelable: true } },
-  change: { interface: 'InputEvent', type: 'change', init: { bubbles: true } },
-  mouseEnter: { interface: 'MouseEvent', type: 'mouseenter', init: { bubbles: true, cancelable: true } },
-  mouseLeave: { interface: 'MouseEvent', type: 'mouseleave', init: { bubbles: true, cancelable: true } },
-  focus: { interface: 'FocusEvent', type: 'focus', init: { bubbles: false, cancelable: false } },
-  blur: { interface: 'FocusEvent', type: 'blur' },
-  wheel: { interface: 'WheelEvent', type: 'wheel', init: { bubbles: true, cancelable: true } },
-  scroll: { interface: 'UIEvent', type: 'scroll' },
-  keyPress: { interface: 'KeyboardEvent', type: 'keypress', init: { bubbles: true, cancelable: true } },
-  keyDown: { interface: 'KeyboardEvent', type: 'keydown', init: { bubbles: true, cancelable: true } },
+import { DOMWindow } from 'jsdom'
+
+enum EventType {
+  MouseEvent = 'MouseEvent',
+  Event = 'Event',
+  InputEvent = 'InputEvent',
+  FocusEvent = 'FocusEvent',
+  WheelEvent = 'WheelEvent',
+  UIEvent = 'UIEvent',
+  KeyboardEvent = 'KeyboardEvent',
 }
-
-function withEvents(node) {
-  return Object.keys(EVENT_TYPES).reduce(getEventNormalizer(node), {})
+enum EventName {
+  Click = 'click',
+  Submit = 'submit',
+  Change = 'change',
+  MouseEnter = 'mouseEnter',
+  MouseLeave = 'mouseLeave',
+  Focus = 'focus',
+  Blur = 'blur',
+  Wheel = 'wheel',
+  Scroll = 'scroll',
+  KeyPress = 'keyPress',
+  KeyDown = 'keyDown',
 }
+type DOMEvent = {
+  type: EventType,
+  name: EventName,
+  content?: EventInit | Event,
+}
+type NormalizedDOMEvents = {
+  [EventName.Click]?: DOMEvent,
+  [EventName.Submit]?: DOMEvent,
+  [EventName.Change]?: DOMEvent,
+  [EventName.MouseEnter]?: DOMEvent,
+  [EventName.MouseLeave]?: DOMEvent,
+  [EventName.Focus]?: DOMEvent,
+  [EventName.Blur]?: DOMEvent,
+  [EventName.Wheel]?: DOMEvent,
+  [EventName.Scroll]?: DOMEvent,
+  [EventName.KeyPress]?: DOMEvent,
+  [EventName.KeyDown]?: DOMEvent,
+}
+type HTMLElementWithValue =
+  | HTMLButtonElement
+  | HTMLDataElement
+  | HTMLInputElement
+  | HTMLLIElement
+  | HTMLMeterElement
+  | HTMLOptionElement
+  | HTMLProgressElement
+  | HTMLParamElement
 
-const getEventNormalizer = node => (dispatchableEvents, eventName) => {
-  const event = EVENT_TYPES[eventName]
+const EVENTS: Array<DOMEvent> = [
+  { type: EventType.MouseEvent, name: EventName.Click, content: { bubbles: true, cancelable: true } },
+  { type: EventType.Event, name: EventName.Submit, content: { bubbles: true, cancelable: true } },
+  { type: EventType.InputEvent, name: EventName.Change, content: { bubbles: true } },
+  { type: EventType.MouseEvent, name: EventName.MouseEnter, content: { bubbles: true, cancelable: true } },
+  { type: EventType.MouseEvent, name: EventName.MouseLeave, content: { bubbles: true, cancelable: true } },
+  { type: EventType.FocusEvent, name: EventName.Focus },
+  { type: EventType.FocusEvent, name: EventName.Blur },
+  { type: EventType.WheelEvent, name: EventName.Wheel, content: { bubbles: true, cancelable: true } },
+  { type: EventType.UIEvent, name: EventName.Scroll },
+  { type: EventType.KeyboardEvent, name: EventName.KeyPress, content: { bubbles: true, cancelable: true } },
+  { type: EventType.KeyboardEvent, name: EventName.KeyDown, content: { bubbles: true, cancelable: true } },
+]
 
-  return {
-    ...dispatchableEvents,
-    [eventName]: init => {
-      const eventInit = { ...event.init, ...init }
-      const { target: { value } = {} } = eventInit
+const withEvents = (node: Node): NormalizedDOMEvents => EVENTS.reduce(getEventNormalizer(node), {})
 
-      if (!!value) {
-        setNativeValue(node, value)
+const getEventNormalizer = (node: Node) => (normalizedEvents: NormalizedDOMEvents, event: DOMEvent): NormalizedDOMEvents => ({
+  ...normalizedEvents,
+  [event.name]: (newEvent: Event): void => {
+    const updatedEvent = {
+      ...event,
+      content: {
+        ...event.content,
+        ...newEvent,
       }
+    }
 
-      return dispatchEvent(node, event.type, event.interface, eventInit)
-    },
-  }
+    setNativeValue(node, updatedEvent.content)
+
+    dispatchEvent(node, updatedEvent)
+  },
+})
+
+function dispatchEvent(node: Node, event: DOMEvent): void {
+  const windowEvent = createWindowEvent(event)
+  if (!windowEvent) { return }
+
+  node.dispatchEvent(windowEvent)
 }
 
-function dispatchEvent(node, type, eventInterface, init = {}) {
-  const WindowEvent = document.defaultView[eventInterface] || document.defaultView.Event
-  const event = new WindowEvent(type, init)
+function createWindowEvent(event: DOMEvent): void | Event {
+  if (!document || !document.defaultView) { return }
+  if (!event || !event.type) { return }
 
-  return node.dispatchEvent(event)
+  const window = document.defaultView as DOMWindow & { [key: string]: EventType }
+  const WindowEvent = window[event.type] as (typeof Event) || window.Event
+  return new WindowEvent(event.name.toLowerCase(), event.content)
 }
 
-function setNativeValue(node, value) {
+function setNativeValue(node: Node, event: Event): void | never {
+  if (!event.target) { return }
+  const { value } = event.target as HTMLElementWithValue
+  if (value === undefined) { return }
+
   const prototype = Object.getPrototypeOf(node)
-  const { set: prototypeValueSetter } = Object.getOwnPropertyDescriptor(prototype, 'value') || {}
-  const { set: valueSetter } = Object.getOwnPropertyDescriptor(node, 'value') || {}
-
-  if (!prototypeValueSetter && !valueSetter) {
-    throw new Error('Element cannot have value property')
-  }
+  const { set: prototypeValueSetter }: PropertyDescriptor = Object.getOwnPropertyDescriptor(prototype, 'value') || {}
+  const { set: valueSetter }: PropertyDescriptor = Object.getOwnPropertyDescriptor(node, 'value') || {}
 
   if (prototypeValueSetter) {
     return prototypeValueSetter.call(node, value)
   }
 
-  valueSetter.call(node, value)
+  if (valueSetter) {
+    return valueSetter.call(node, value)
+  }
+
+  throw new Error('Element cannot have value property')
 }
 
 export { withEvents }
