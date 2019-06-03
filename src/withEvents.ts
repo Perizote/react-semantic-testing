@@ -9,6 +9,7 @@ enum EventType {
   UIEvent = 'UIEvent',
   KeyboardEvent = 'KeyboardEvent',
 }
+
 enum EventName {
   Click = 'click',
   Submit = 'submit',
@@ -22,11 +23,13 @@ enum EventName {
   KeyPress = 'keyPress',
   KeyDown = 'keyDown',
 }
+
 type DOMEvent = {
   type: EventType,
   name: EventName,
   content?: EventInit | Event,
 }
+
 type NormalizedDOMEvents = {
   [EventName.Click]?: DOMEvent,
   [EventName.Submit]?: DOMEvent,
@@ -40,6 +43,7 @@ type NormalizedDOMEvents = {
   [EventName.KeyPress]?: DOMEvent,
   [EventName.KeyDown]?: DOMEvent,
 }
+
 type HTMLElementWithValue =
   | HTMLButtonElement
   | HTMLDataElement
