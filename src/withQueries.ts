@@ -10,6 +10,8 @@ import {
   getValueComparator,
 } from './utils'
 
+type NodeWithQueries = any
+
 let lastQuery
 
 const setAsLastQuery = query => lastQuery = query
@@ -83,4 +85,4 @@ function withQueries(node) {
   }
 }
 
-export { withQueries, setAsLastQuery, getLastQuery as lastQuery }
+export { withQueries, setAsLastQuery, getLastQuery as lastQuery, NodeWithQueries }

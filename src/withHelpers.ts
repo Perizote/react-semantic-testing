@@ -40,4 +40,4 @@ const withHelpers = (node: Node & HTMLElementWithValue): NodeWithHelpers => ({
   },
 })
 
-export { withHelpers }
+export { withHelpers, NodeWithHelpers }

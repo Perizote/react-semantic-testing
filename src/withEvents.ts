@@ -30,7 +30,7 @@ type DOMEvent = {
   content?: EventInit | Event,
 }
 
-type NormalizedDOMEvents = {
+type NodeWithEvents = {
   [EventName.Click]?: DOMEvent,
   [EventName.Submit]?: DOMEvent,
   [EventName.Change]?: DOMEvent,
@@ -68,9 +68,9 @@ const EVENTS: Array<DOMEvent> = [
   { type: EventType.KeyboardEvent, name: EventName.KeyDown, content: { bubbles: true, cancelable: true } },
 ]
 
-const withEvents = (node: Node): NormalizedDOMEvents => EVENTS.reduce(getEventNormalizer(node), {})
+const withEvents = (node: Node): NodeWithEvents => EVENTS.reduce(getEventNormalizer(node), {})
 
-const getEventNormalizer = (node: Node) => (normalizedEvents: NormalizedDOMEvents, event: DOMEvent): NormalizedDOMEvents => ({
+const getEventNormalizer = (node: Node) => (normalizedEvents: NodeWithEvents, event: DOMEvent): NodeWithEvents => ({
   ...normalizedEvents,
   [event.name]: (newEvent: Event): void => {
     const updatedEvent = {
@@ -123,4 +123,4 @@ function setNativeValue(node: Node, event: Event): void | never {
   throw new Error('Element cannot have value property')
 }
 
-export { withEvents }
+export { withEvents, NodeWithEvents }

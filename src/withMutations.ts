@@ -1,86 +1,110 @@
 import 'mutationobserver-shim'
 
-import { withQueries, lastQuery } from './withQueries'
-import { withEvents } from './withEvents'
-import { withHelpers } from './withHelpers'
+import { withQueries, lastQuery, NodeWithQueries } from './withQueries'
+import { withEvents, NodeWithEvents } from './withEvents'
+import { withHelpers, NodeWithHelpers } from './withHelpers'
 
-async function createMutationObserver(callback, { timeout = 3000, node, error } = {}) {
-  return new Promise((resolve, reject) => {
+type Callback = (mutations: Array<MutationRecord>) => any
+type Options = {
+  timeout?: number,
+  node: Node,
+  error: string,
+}
+type NodeWithToolsWithoutMutations = NodeWithQueries & NodeWithEvents & NodeWithHelpers
+type NodeWithMutations = {
+  waitUntilItChanges: () => Promise<undefined | NodeWithToolsWithoutMutations>,
+  waitUntilItAppears: () => Promise<Array<NodeWithToolsWithoutMutations> | undefined | NodeWithToolsWithoutMutations>,
+  waitUntilItDisappears: (mutations: Array<MutationRecord>) => Promise<undefined | NodeWithToolsWithoutMutations>,
+}
+type HTMLElementWithValue =
+  | HTMLButtonElement
+  | HTMLDataElement
+  | HTMLInputElement
+  | HTMLLIElement
+  | HTMLMeterElement
+  | HTMLOptionElement
+  | HTMLProgressElement
+  | HTMLParamElement
+
+const createMutationObserver = async (callback: Callback, options: Options): Promise<undefined | NodeWithToolsWithoutMutations> => (
+  new Promise((resolve, reject) => {
+    const { timeout = 3000, node, error } = options
     const timeoutId = setTimeout(onTimeout, timeout)
     const mutationObserver = new MutationObserver(onMutation)
     mutationObserver.observe(node, { attributes: true, childList: true, characterData: true, subtree: true })
 
-    function onTimeout() {
+    function onTimeout(): void {
       finish()
       reject(error)
     }
 
-    function onMutation(mutations) {
+    function onMutation(mutations: Array<MutationRecord>): void {
       const result = callback(mutations)
       finish()
       resolve(result)
     }
 
-    function finish() {
+    function finish(): void {
       clearTimeout(timeoutId)
       mutationObserver.disconnect()
     }
   })
-}
+)
 
-const withTools = node => ({
+const withTools = (node: Node & HTMLElementWithValue): NodeWithToolsWithoutMutations => ({
   ...withEvents(node),
   ...withHelpers(node),
   ...withQueries(node),
 })
 
-function withMutations(node) {
-  return {
-    async waitUntilItChanges() {
-      const onChange = () => withTools(node)
+const withMutations = (node: Node & HTMLElementWithValue): NodeWithToolsWithoutMutations => ({
+  async waitUntilItChanges(): Promise<NodeWithToolsWithoutMutations> {
+    const onChange = (): NodeWithToolsWithoutMutations => withTools(node)
+    const options = {
+      node,
+      error: 'Timeout waiting for node to change',
+    }
 
-      return createMutationObserver(onChange, {
-        node,
-        error: 'Timeout waiting for node to change',
-      })
-    },
-    async waitUntilItAppears() {
-      const onRender = () => {
-        const renderedNodes = lastQuery()
+    return createMutationObserver(onChange, options)
+  },
+  async waitUntilItAppears(): Promise<Array<NodeWithToolsWithoutMutations> | undefined | NodeWithToolsWithoutMutations> {
+    const onRender = (): Array<NodeWithToolsWithoutMutations> | undefined | NodeWithToolsWithoutMutations => {
+      const renderedNodes = lastQuery()
 
-        if (renderedNodes.length > 0) {
-          return renderedNodes
-        }
-
-        if (!renderedNodes.getRawNode()) { return }
-
+      if (renderedNodes.length > 0) {
         return renderedNodes
       }
 
-      return createMutationObserver(onRender, {
-        node: document,
-        error: 'Timeout waiting for node to render',
-      })
-    },
-    async waitUntilItDisappears() {
-      const onDisappear = mutations => {
-        const hasBeenDisappeared = mutations
-          .filter(({ removedNodes }) => removedNodes.length > 0)
-          .map(({ removedNodes }) => removedNodes)
-          .flat()
-          .some(removedNode => removedNode.isSameNode(node))
+      if (!renderedNodes.getRawNode()) { return }
 
-        if (!hasBeenDisappeared) { return }
-
-        return withTools(node)
-      }
-
-      return createMutationObserver(onDisappear, {
-        node: node.parentNode,
-        error: 'Timeout waiting for node to disappear',
-      })
+      return renderedNodes
     }
-  }
-}
+    const options = {
+      node: document,
+      error: 'Timeout waiting for node to render',
+    }
 
-export { withMutations }
+    return createMutationObserver(onRender, options)
+  },
+  async waitUntilItDisappears(): Promise<undefined | NodeWithToolsWithoutMutations> {
+    const onDisappear = (mutations: Array<MutationRecord>): undefined | NodeWithToolsWithoutMutations => {
+      const hasBeenDisappeared = mutations
+        .filter(({ removedNodes }) => removedNodes.length > 0)
+        .map(({ removedNodes }) => removedNodes)
+        .flat()
+        .some(removedNode => removedNode.isSameNode(node))
+
+      if (!hasBeenDisappeared) { return }
+
+      return withTools(node)
+    }
+    const options = {
+      node: node.parentNode || document,
+      error: 'Timeout waiting for node to disappear',
+    }
+
+    return createMutationObserver(onDisappear, options)
+  }
+})
+
+export { withMutations, NodeWithMutations }
