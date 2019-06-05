@@ -10,7 +10,7 @@ import {
 } from './withQueries'
 import { withEvents, NodeWithEvents } from './withEvents'
 import { withHelpers, NodeWithHelpers } from './withHelpers'
-import { DOMNode } from './withTools'
+import { DOMNode } from './utils/DOMNode'
 
 type Callback = (mutations: MutationRecord[]) => any
 type Options = {

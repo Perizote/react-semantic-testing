@@ -1,11 +1,10 @@
-import { getTextComparator, getMultipleTextComparator, getValueComparator, TextMatcher } from './utils'
+import { getTextComparator, getMultipleTextComparator, getValueComparator, TextMatcher } from './utils/matchers'
 import { NodeWithEvents } from './withEvents'
 import { NodeWithQueries } from './withQueries'
 import { NodeWithHelpers } from './withHelpers'
 import { NodeWithMutations } from './withMutations'
-import { DOMNode } from './withTools'
+import { DOMNode, DOMNodeList } from './utils/DOMNode'
 
-type DOMNodeList = DOMNode[]
 type Matcher = {
   message: () => string,
   pass: boolean,
@@ -46,7 +45,7 @@ const assertions = {
   toHaveValue(node: NodeContainingTools, value: TextMatcher): Matcher {
     const isInCurrentNode = getValueComparator(value)
 
-    return isInCurrentNode(node.getRawNode() as HTMLInputElement & HTMLSelectElement & HTMLTextAreaElement)
+    return isInCurrentNode(node.getRawNode())
       ? buildPassingMatcher(`expected node not to have value "${ value }" but actually does`)
       : buildFailingMatcher(`expected node to have value "${ value }" but instead has "${ node.getValue() }"`)
   },

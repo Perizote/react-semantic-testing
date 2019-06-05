@@ -1,15 +1,5 @@
 import prettyFormat from 'pretty-format'
-import { DOMNode } from './withTools'
-
-type HTMLElementWithValue =
-  | HTMLButtonElement
-  | HTMLDataElement
-  | HTMLInputElement
-  | HTMLLIElement
-  | HTMLMeterElement
-  | HTMLOptionElement
-  | HTMLProgressElement
-  | HTMLParamElement
+import { DOMNode } from './utils/DOMNode'
 
 type NodeWithHelpers = {
   getRawNode: () => DOMNode,
@@ -26,7 +16,7 @@ const withHelpers = (node: DOMNode): NodeWithHelpers => ({
     return node.textContent
   },
   getValue(): string | number | undefined {
-    return (node as HTMLElementWithValue).value
+    return node.value
   },
   logTree(options: object): void {
     const { DOMElement, DOMCollection } = prettyFormat.plugins

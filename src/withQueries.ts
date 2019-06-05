@@ -2,15 +2,13 @@ import { withEvents, NodeWithEvents } from './withEvents'
 import { withHelpers, NodeWithHelpers } from './withHelpers'
 import { withMutations, NodeWithMutations } from './withMutations'
 import {
-  DOMAttribute,
-  DOMTags,
   getTextComparator,
   getLabelComparator,
   getAttributeComparator,
   getValueComparator,
   TextMatcher,
-} from './utils'
-import { DOMNode } from './withTools'
+} from './utils/matchers'
+import { DOMNode, DOMNodeList, DOMAttribute, DOMTag } from './utils/DOMNode'
 
 type NodeWithToolsWithoutQueries = NodeWithEvents & NodeWithHelpers & NodeWithMutations
 type QueryForNodeListResult = NodeWithToolsWithoutQueries[]
@@ -26,7 +24,6 @@ type NodeWithQueries = {
   getByRole: (role: TextMatcher) => QueryForSingleNodeResult,
   getByValue: (value: TextMatcher) => QueryForSingleNodeResult,
 }
-type DOMNodeList = DOMNode[]
 
 let lastQuery: Query
 
@@ -42,9 +39,7 @@ const withTools = (node: DOMNode): NodeWithToolsWithoutQueries => ({
   ...withMutations(node),
 })
 
-const buildQueryForLists = (listOfFoundNodes: DOMNodeList): QueryForNodeListResult => {
-  return listOfFoundNodes.map(withTools)
-}
+const buildQueryForLists = (listOfFoundNodes: DOMNodeList): QueryForNodeListResult => listOfFoundNodes.map(withTools)
 
 const withQueries = (node: DOMNode): NodeWithQueries => ({
   getByDataTest(dataTest: TextMatcher): QueryForSingleNodeResult {
@@ -81,7 +76,7 @@ const withQueries = (node: DOMNode): NodeWithQueries => ({
   },
   getByLabelText(labelText: TextMatcher): QueryForSingleNodeResult {
     const query = () => {
-      const { control } = ([ ...node.querySelectorAll(DOMTags.Label) ] as DOMNodeList)
+      const { control } = ([ ...node.querySelectorAll(DOMTag.Label) ] as DOMNodeList)
         .find(getLabelComparator(labelText)) as HTMLLabelElement
       return withTools(control as DOMNode)
     }
@@ -98,7 +93,7 @@ const withQueries = (node: DOMNode): NodeWithQueries => ({
   },
   getByValue(value: TextMatcher): QueryForSingleNodeResult {
     const query = () => withTools(
-      ([ ...node.querySelectorAll(`${ DOMTags.Input }, ${ DOMTags.Select }, ${ DOMTags.TextArea }`) ] as DOMNodeList)
+      ([ ...node.querySelectorAll(`${ DOMTag.Input }, ${ DOMTag.Select }, ${ DOMTag.TextArea }`) ] as DOMNodeList)
         .find(getValueComparator(value)) as DOMNode
     )
     setAsLastQuery(query)

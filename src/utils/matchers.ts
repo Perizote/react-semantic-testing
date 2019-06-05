@@ -1,18 +1,5 @@
-import { DOMNode } from './withTools'
+import { DOMNode, DOMAttribute } from './DOMNode'
 
-enum DOMAttribute {
-  AriaLabel = 'aria-label',
-  DataTest = 'data-test',
-  Alt = 'alt',
-  Role = 'role',
-}
-
-enum DOMTags {
-  Label = 'label',
-  Input = 'input',
-  Select = 'select',
-  TextArea = 'textarea',
-}
 type TextMatcher = undefined | string | number | RegExp
 
 const compareText = (text: TextMatcher, textToCompare: string): boolean => {
@@ -27,7 +14,7 @@ const compareText = (text: TextMatcher, textToCompare: string): boolean => {
 
 const getTextFromNode = (node: Node): string => {
   const isTextNode = ({ nodeType, textContent }: Node): boolean => nodeType === Node.TEXT_NODE && Boolean(textContent)
-  const getText = ({ textContent }: Node): string => textContent || ''
+  const getText = ({ textContent }: Node): string => textContent as string
 
   return [ ...node.childNodes ]
     .filter(isTextNode)
@@ -80,20 +67,18 @@ const getAttributeComparator =
       return compareText(attributeValue, attribute)
 }
 
-const getValueComparator =
-  (value: TextMatcher) =>
-    (node: HTMLInputElement & HTMLSelectElement & HTMLTextAreaElement): boolean => {
-      const { options, selectedIndex, value: nodeValue } = node
-      if (Boolean(options)) {
-        return compareText(value, options[selectedIndex].textContent || '')
-      }
+const getValueComparator = (value: TextMatcher) => (node: DOMNode): boolean => {
+  const { options, selectedIndex, value: nodeValue } = node
 
-      return compareText(value, nodeValue)
+  if (Boolean(options)) {
+    const selectedOption = options[selectedIndex]
+    return compareText(value, selectedOption.textContent || '')
+  }
+
+  return compareText(value, nodeValue)
 }
 
 export {
-  DOMAttribute,
-  DOMTags,
   getTextComparator,
   getMultipleTextComparator,
   getLabelComparator,
