@@ -11,7 +11,8 @@
 		// Import non-ES modules as default imports.
     "esModuleInterop": true,
 		"declaration": true,
-		"outDir": "build"
+		"outDir": "build",
+		"jsx": "react",
 	},
 	"include": [
     "src/**/*",

@@ -1,4 +1,4 @@
-import { withTools } from '../'
+import { withTools } from '../src'
 
 describe('withHelpers', () => {
   const node = `

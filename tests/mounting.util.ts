@@ -1,4 +1,4 @@
-import { withTools, NodeWithTools, DOMNode } from '../withTools'
+import { withTools, NodeWithTools, DOMNode } from '../src/withTools'
 
 const mountedComponents = new Set()
 

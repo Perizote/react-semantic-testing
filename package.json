@@ -2,7 +2,7 @@
   "name": "aguacatest",
   "version": "0.0.1",
   "description": "",
-  "main": "src/index.js",
+  "main": "build/index.js",
   "types": "build/index.d.ts",
   "scripts": {
     "test": "jest --config config/jest.config.json",
@@ -11,7 +11,7 @@
     "type-check:watch": "tsc --watch",
     "build": "npm run build:types && npm run build:js",
     "build:types": "tsc --noEmit false --emitDeclarationOnly",
-    "build:js": "babel src --extensions \".ts,.tsx\" --source-maps inline"
+    "build:js": "babel src --out-dir build --extensions \".ts\" --source-maps inline"
   },
   "keywords": [
     "testing",
@@ -40,6 +40,13 @@
   "devDependencies": {
     "@babel/cli": "^7.4.4",
     "@babel/core": "^7.3.3",
+    "@babel/plugin-proposal-class-properties": "^7.4.4",
+    "@babel/plugin-proposal-object-rest-spread": "^7.4.4",
+    "@babel/plugin-transform-runtime": "^7.4.4",
+    "@babel/preset-env": "^7.4.5",
+    "@babel/preset-react": "^7.0.0",
+    "@babel/preset-typescript": "^7.3.3",
+    "@babel/runtime": "^7.4.5",
     "@types/jest": "^24.0.13",
     "@types/jsdom": "^12.2.3",
     "@types/react": "^16.8.19",
@@ -48,7 +55,6 @@
     "@types/react-router": "^5.0.1",
     "@types/react-router-dom": "^4.3.3",
     "babel-jest": "^24.1.0",
-    "babel-preset-react-app": "^7.0.1",
     "jest": "^24.1.0",
     "prettier": "1.16.4",
     "react": "^16.9.0-alpha.0",
@@ -61,7 +67,14 @@
   },
   "babel": {
     "presets": [
-      "react-app"
+      "@babel/env",
+      "@babel/typescript",
+      "@babel/react"
+    ],
+    "plugins": [
+      "@babel/plugin-transform-runtime",
+      "@babel/proposal-class-properties",
+      "@babel/proposal-object-rest-spread"
     ]
   }
 }

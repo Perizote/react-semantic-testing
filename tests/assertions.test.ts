@@ -1,5 +1,5 @@
 import { mount, unmount } from './mounting.util'
-import { assertions } from '../assertions'
+import { assertions } from '../src'
 
 describe('assertions can be used to extend jest', () => {
   let nodeMountedWithTools

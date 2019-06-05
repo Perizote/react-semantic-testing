@@ -1,7 +1,6 @@
 {
   "rootDir": "..",
   "testMatch": [
-    "<rootDir>/**/__tests__/?(*.)(test).{ts}",
     "<rootDir>/**/?(*.)(test).ts?(x)"
   ],
   "moduleFileExtensions": ["ts", "tsx", "json", "js"],
