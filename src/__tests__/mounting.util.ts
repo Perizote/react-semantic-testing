@@ -1,9 +1,9 @@
-import { withTools } from '../../src'
+import { withTools, NodeWithTools, DOMNode } from '../withTools'
 
 const mountedComponents = new Set()
 
-function mount(node) {
-  const rootNode = document.body.appendChild(document.createElement('div'))
+function mount(node: string): NodeWithTools {
+  const rootNode = document.body.appendChild(document.createElement('div')) as DOMNode
   mountedComponents.add(rootNode)
 
   rootNode.innerHTML = node
@@ -11,7 +11,7 @@ function mount(node) {
   return withTools(rootNode)
 }
 
-function unmount() {
+function unmount(): void {
   mountedComponents.forEach(component => {
     if (document.body.contains(component)) {
       document.body.removeChild(component)

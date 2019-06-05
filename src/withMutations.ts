@@ -1,32 +1,31 @@
 import 'mutationobserver-shim'
 
-import { withQueries, lastQuery, NodeWithQueries } from './withQueries'
+import {
+  withQueries,
+  lastQuery,
+  NodeWithQueries,
+  QueryResult,
+  QueryForNodeListResult,
+  QueryForSingleNodeResult,
+} from './withQueries'
 import { withEvents, NodeWithEvents } from './withEvents'
 import { withHelpers, NodeWithHelpers } from './withHelpers'
+import { DOMNode } from './withTools'
 
-type Callback = (mutations: Array<MutationRecord>) => any
+type Callback = (mutations: MutationRecord[]) => any
 type Options = {
   timeout?: number,
-  node: Node,
+  node: DOMNode,
   error: string,
 }
 type NodeWithToolsWithoutMutations = NodeWithQueries & NodeWithEvents & NodeWithHelpers
 type NodeWithMutations = {
-  waitUntilItChanges: () => Promise<undefined | NodeWithToolsWithoutMutations>,
-  waitUntilItAppears: () => Promise<Array<NodeWithToolsWithoutMutations> | undefined | NodeWithToolsWithoutMutations>,
-  waitUntilItDisappears: (mutations: Array<MutationRecord>) => Promise<undefined | NodeWithToolsWithoutMutations>,
+  waitUntilItChanges: () => Promise<NodeWithToolsWithoutMutations>,
+  waitUntilItAppears: () => Promise<QueryResult | void>,
+  waitUntilItDisappears: (mutations: MutationRecord[]) => Promise<void | NodeWithToolsWithoutMutations>,
 }
-type HTMLElementWithValue =
-  | HTMLButtonElement
-  | HTMLDataElement
-  | HTMLInputElement
-  | HTMLLIElement
-  | HTMLMeterElement
-  | HTMLOptionElement
-  | HTMLProgressElement
-  | HTMLParamElement
 
-const createMutationObserver = async (callback: Callback, options: Options): Promise<undefined | NodeWithToolsWithoutMutations> => (
+const createMutationObserver = async (callback: Callback, options: Options): Promise<any> => (
   new Promise((resolve, reject) => {
     const { timeout = 3000, node, error } = options
     const timeoutId = setTimeout(onTimeout, timeout)
@@ -38,7 +37,7 @@ const createMutationObserver = async (callback: Callback, options: Options): Pro
       reject(error)
     }
 
-    function onMutation(mutations: Array<MutationRecord>): void {
+    function onMutation(mutations: MutationRecord[]): void {
       const result = callback(mutations)
       finish()
       resolve(result)
@@ -51,13 +50,13 @@ const createMutationObserver = async (callback: Callback, options: Options): Pro
   })
 )
 
-const withTools = (node: Node & HTMLElementWithValue): NodeWithToolsWithoutMutations => ({
+const withTools = (node: DOMNode): NodeWithToolsWithoutMutations => ({
   ...withEvents(node),
   ...withHelpers(node),
   ...withQueries(node),
 })
 
-const withMutations = (node: Node & HTMLElementWithValue): NodeWithToolsWithoutMutations => ({
+const withMutations = (node: DOMNode): NodeWithMutations => ({
   async waitUntilItChanges(): Promise<NodeWithToolsWithoutMutations> {
     const onChange = (): NodeWithToolsWithoutMutations => withTools(node)
     const options = {
@@ -67,27 +66,27 @@ const withMutations = (node: Node & HTMLElementWithValue): NodeWithToolsWithoutM
 
     return createMutationObserver(onChange, options)
   },
-  async waitUntilItAppears(): Promise<Array<NodeWithToolsWithoutMutations> | undefined | NodeWithToolsWithoutMutations> {
-    const onRender = (): Array<NodeWithToolsWithoutMutations> | undefined | NodeWithToolsWithoutMutations => {
+  async waitUntilItAppears(): Promise<QueryResult | void> {
+    const onRender = (): QueryResult | void => {
       const renderedNodes = lastQuery()
 
-      if (renderedNodes.length > 0) {
+      if ((renderedNodes as QueryForNodeListResult).length > 0) {
         return renderedNodes
       }
 
-      if (!renderedNodes.getRawNode()) { return }
+      if (!(renderedNodes as QueryForSingleNodeResult).getRawNode()) { return }
 
       return renderedNodes
     }
     const options = {
-      node: document,
+      node: (document as DOMNode),
       error: 'Timeout waiting for node to render',
     }
 
     return createMutationObserver(onRender, options)
   },
-  async waitUntilItDisappears(): Promise<undefined | NodeWithToolsWithoutMutations> {
-    const onDisappear = (mutations: Array<MutationRecord>): undefined | NodeWithToolsWithoutMutations => {
+  async waitUntilItDisappears(): Promise<void | NodeWithToolsWithoutMutations> {
+    const onDisappear = (mutations: MutationRecord[]): void | NodeWithToolsWithoutMutations => {
       const hasBeenDisappeared = mutations
         .filter(({ removedNodes }) => removedNodes.length > 0)
         .map(({ removedNodes }) => removedNodes)
@@ -99,7 +98,7 @@ const withMutations = (node: Node & HTMLElementWithValue): NodeWithToolsWithoutM
       return withTools(node)
     }
     const options = {
-      node: node.parentNode || document,
+      node: (node.parentNode as DOMNode) || document,
       error: 'Timeout waiting for node to disappear',
     }
 

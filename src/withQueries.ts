@@ -1,88 +1,117 @@
-import { withEvents } from './withEvents'
-import { withHelpers } from './withHelpers'
-import { withMutations } from './withMutations'
+import { withEvents, NodeWithEvents } from './withEvents'
+import { withHelpers, NodeWithHelpers } from './withHelpers'
+import { withMutations, NodeWithMutations } from './withMutations'
 import {
-  DOM_ATTRIBUTES,
-  DOM_TAGS,
+  DOMAttribute,
+  DOMTags,
   getTextComparator,
   getLabelComparator,
   getAttributeComparator,
   getValueComparator,
+  TextMatcher,
 } from './utils'
+import { DOMNode } from './withTools'
 
-type NodeWithQueries = any
+type NodeWithToolsWithoutQueries = NodeWithEvents & NodeWithHelpers & NodeWithMutations
+type QueryForNodeListResult = NodeWithToolsWithoutQueries[]
+type QueryForSingleNodeResult = NodeWithToolsWithoutQueries
+type QueryResult = QueryForSingleNodeResult | QueryForNodeListResult
+type Query = () => QueryResult
+type NodeWithQueries = {
+  getByDataTest: (dataTest: TextMatcher) => QueryForSingleNodeResult,
+  getAllByDataTest: (dataTest: TextMatcher) => QueryForNodeListResult,
+  getByText: (text: TextMatcher) => QueryForSingleNodeResult,
+  getAllByText: (text: TextMatcher) => QueryForNodeListResult,
+  getByLabelText: (labelText: TextMatcher) => QueryForSingleNodeResult,
+  getByRole: (role: TextMatcher) => QueryForSingleNodeResult,
+  getByValue: (value: TextMatcher) => QueryForSingleNodeResult,
+}
+type DOMNodeList = DOMNode[]
 
-let lastQuery
+let lastQuery: Query
 
-const setAsLastQuery = query => lastQuery = query
+const setAsLastQuery = (query: Query): void => {
+  lastQuery = query
+}
 
-const getLastQuery = () => lastQuery()
+const getLastQuery = (): QueryResult => lastQuery()
 
-const withTools = node => ({
+const withTools = (node: DOMNode): NodeWithToolsWithoutQueries => ({
   ...withEvents(node),
   ...withHelpers(node),
   ...withMutations(node),
 })
 
-const buildQueryForLists = listOfFoundNodes => {
-  if (listOfFoundNodes.length === 0){
-    return withTools([])
-  }
-
+const buildQueryForLists = (listOfFoundNodes: DOMNodeList): QueryForNodeListResult => {
   return listOfFoundNodes.map(withTools)
 }
 
-function withQueries(node) {
-  return {
-    getByDataTest(dataTest) {
-      const query = () => withTools(
-        [ ...node.querySelectorAll(`[${ DOM_ATTRIBUTES.DATA_TEST }]`) ]
-          .find(getAttributeComparator(dataTest, DOM_ATTRIBUTES.DATA_TEST))
-      )
-      setAsLastQuery(query)
-      return query()
-    },
-    getAllByDataTest(dataTest) {
-      const query = () => buildQueryForLists(
-        [ ...node.querySelectorAll(`[${ DOM_ATTRIBUTES.DATA_TEST }]`) ]
-          .filter(getAttributeComparator(dataTest, DOM_ATTRIBUTES.DATA_TEST))
-      )
-      setAsLastQuery(query)
-      return query()
-    },
-    getByText(text) {
-      const query = () => withTools([ ...node.querySelectorAll('*') ].find(getTextComparator(text)))
-      setAsLastQuery(query)
-      return query()
-    },
-    getAllByText(text) {
-      const query = () => buildQueryForLists([ ...node.querySelectorAll('*') ].filter(getTextComparator(text)))
-      setAsLastQuery(query)
-      return query()
-    },
-    getByLabelText(labelText) {
-      const query = () => {
-        const { control: input } = [ ...node.querySelectorAll(DOM_TAGS.LABEL) ].find(getLabelComparator(labelText)) || {}
-        return withTools(input)
-      }
-      setAsLastQuery(query)
-      return query()
-    },
-    getByRole(role) {
-      const query = () => withTools([ ...node.querySelectorAll(`[${ DOM_ATTRIBUTES.ROLE }]`) ]
-        .find(getAttributeComparator(role, DOM_ATTRIBUTES.ROLE)))
-      setAsLastQuery(query)
-      return query()
-    },
-    getByValue(value) {
-      const query = () => withTools(
-        [ ...node.querySelectorAll(`${ DOM_TAGS.INPUT }, ${ DOM_TAGS.SELECT }, ${ DOM_TAGS.TEXT_AREA }`) ]
-          .find(getValueComparator(value))
-      )
-      setAsLastQuery(query)
-      return query()
+const withQueries = (node: DOMNode): NodeWithQueries => ({
+  getByDataTest(dataTest: TextMatcher): QueryForSingleNodeResult {
+    const query = () => withTools(
+      ([ ...node.querySelectorAll(`[${ DOMAttribute.DataTest }]`) ] as DOMNodeList)
+        .find(getAttributeComparator(dataTest, DOMAttribute.DataTest)) as DOMNode
+    )
+    setAsLastQuery(query)
+    return query()
+  },
+  getAllByDataTest(dataTest: TextMatcher): QueryForNodeListResult {
+    const query = () => buildQueryForLists(
+      ([ ...node.querySelectorAll(`[${ DOMAttribute.DataTest }]`) ] as DOMNodeList)
+        .filter(getAttributeComparator(dataTest, DOMAttribute.DataTest))
+    )
+    setAsLastQuery(query)
+    return query()
+  },
+  getByText(text: TextMatcher): QueryForSingleNodeResult {
+    const query = () => withTools(
+      ([ ...node.querySelectorAll('*') ] as DOMNodeList)
+        .find(getTextComparator(text)) as DOMNode
+    )
+    setAsLastQuery(query)
+    return query()
+  },
+  getAllByText(text: TextMatcher): QueryForNodeListResult {
+    const query = () => buildQueryForLists(
+      ([ ...node.querySelectorAll('*') ] as DOMNodeList)
+        .filter(getTextComparator(text))
+    )
+    setAsLastQuery(query)
+    return query()
+  },
+  getByLabelText(labelText: TextMatcher): QueryForSingleNodeResult {
+    const query = () => {
+      const { control } = ([ ...node.querySelectorAll(DOMTags.Label) ] as DOMNodeList)
+        .find(getLabelComparator(labelText)) as HTMLLabelElement
+      return withTools(control as DOMNode)
     }
+    setAsLastQuery(query)
+    return query()
+  },
+  getByRole(role: TextMatcher): QueryForSingleNodeResult {
+    const query = () => withTools(
+      ([ ...node.querySelectorAll(`[${ DOMAttribute.Role }]`) ] as DOMNodeList)
+        .find(getAttributeComparator(role, DOMAttribute.Role)) as DOMNode
+    )
+    setAsLastQuery(query)
+    return query()
+  },
+  getByValue(value: TextMatcher): QueryForSingleNodeResult {
+    const query = () => withTools(
+      ([ ...node.querySelectorAll(`${ DOMTags.Input }, ${ DOMTags.Select }, ${ DOMTags.TextArea }`) ] as DOMNodeList)
+        .find(getValueComparator(value)) as DOMNode
+    )
+    setAsLastQuery(query)
+    return query()
   }
-}
+})
 
-export { withQueries, setAsLastQuery, getLastQuery as lastQuery, NodeWithQueries }
+export {
+  withQueries,
+  setAsLastQuery,
+  getLastQuery as lastQuery,
+  NodeWithQueries,
+  QueryResult,
+  QueryForNodeListResult,
+  QueryForSingleNodeResult
+}

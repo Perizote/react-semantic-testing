@@ -1,48 +1,63 @@
-import { getTextComparator, getMultipleTextComparator, getValueComparator } from './utils'
+import { getTextComparator, getMultipleTextComparator, getValueComparator, TextMatcher } from './utils'
+import { NodeWithEvents } from './withEvents'
+import { NodeWithQueries } from './withQueries'
+import { NodeWithHelpers } from './withHelpers'
+import { NodeWithMutations } from './withMutations'
+import { DOMNode } from './withTools'
 
-const buildPassingMatcher = message => ({
+type DOMNodeList = DOMNode[]
+type Matcher = {
+  message: () => string,
+  pass: boolean,
+}
+type NodeContainingTools = NodeWithEvents & NodeWithQueries & NodeWithHelpers & NodeWithMutations
+
+const buildPassingMatcher = (message: string): Matcher => ({
   message: () => message,
   pass: true,
 })
 
-const buildFailingMatcher = message => ({
+const buildFailingMatcher = (message: string): Matcher => ({
   message: () => message,
   pass: false,
 })
 
 const assertions = {
-  toBeRendered(node) {
+  toBeRendered(node: NodeContainingTools): Matcher {
     return document.body.contains(node.getRawNode())
       ? buildPassingMatcher('expected node not to be rendered')
       : buildFailingMatcher('expected node to be rendered')
   },
-  toHaveText(node, text) {
-    const isInAChildNode = (text, node) => [ ...node.querySelectorAll('*') ].some(getMultipleTextComparator(text))
+  toHaveText(node: NodeContainingTools, text: TextMatcher): Matcher {
+    const isInAChildNode = (text: TextMatcher, node: DOMNode): boolean =>
+      ([ ...node.querySelectorAll('*') ] as DOMNodeList).some(getMultipleTextComparator(text))
     const isInCurrentNode = getTextComparator(text)
+    const nodeText = node.getText() || ''
 
     return isInCurrentNode(node.getRawNode()) || isInAChildNode(text, node.getRawNode())
       ? buildPassingMatcher(`expected node not to have text "${ text }" but actually does`)
-      : buildFailingMatcher(`expected node to have text "${ text }" but instead has "${ node.getText().trim() }"`)
+      : buildFailingMatcher(`expected node to have text "${ text }" but instead has "${ nodeText.trim() }"`)
   },
-  toBeDisabled(node) {
+  toBeDisabled(node: NodeContainingTools): Matcher {
     return node.getRawNode().disabled
       ? buildPassingMatcher('expected node not to be disabled')
       : buildFailingMatcher('expected node to be disabled')
   },
-  toHaveValue(node, value) {
+  toHaveValue(node: NodeContainingTools, value: TextMatcher): Matcher {
     const isInCurrentNode = getValueComparator(value)
 
-    return isInCurrentNode(node.getRawNode())
+    return isInCurrentNode(node.getRawNode() as HTMLInputElement & HTMLSelectElement & HTMLTextAreaElement)
       ? buildPassingMatcher(`expected node not to have value "${ value }" but actually does`)
       : buildFailingMatcher(`expected node to have value "${ value }" but instead has "${ node.getValue() }"`)
   },
-  toBeChecked(node) {
+  toBeChecked(node: NodeContainingTools): Matcher {
     return node.getRawNode().checked
       ? buildPassingMatcher('expected node not to be checked')
       : buildFailingMatcher('expected node to be checked')
   },
-  toHaveFocus(node) {
-    const hasFocus = node.getRawNode().ownerDocument.activeElement === node.getRawNode()
+  toHaveFocus(node: NodeContainingTools): Matcher {
+    const documentNode = node.getRawNode().ownerDocument
+    const hasFocus = documentNode && documentNode.activeElement === node.getRawNode()
 
     return hasFocus
       ? buildPassingMatcher('expected node not to have focus')

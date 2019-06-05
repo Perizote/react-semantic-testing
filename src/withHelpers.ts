@@ -1,4 +1,5 @@
 import prettyFormat from 'pretty-format'
+import { DOMNode } from './withTools'
 
 type HTMLElementWithValue =
   | HTMLButtonElement
@@ -11,21 +12,21 @@ type HTMLElementWithValue =
   | HTMLParamElement
 
 type NodeWithHelpers = {
-  getRawNode: () => Node,
+  getRawNode: () => DOMNode,
   getText: () => string | null,
   getValue: () => string | number | undefined,
   logTree: (options: object) => void,
 }
 
-const withHelpers = (node: Node & HTMLElementWithValue): NodeWithHelpers => ({
-  getRawNode(): Node {
+const withHelpers = (node: DOMNode): NodeWithHelpers => ({
+  getRawNode(): DOMNode {
     return node
   },
   getText(): string | null {
     return node.textContent
   },
   getValue(): string | number | undefined {
-    return node.value
+    return (node as HTMLElementWithValue).value
   },
   logTree(options: object): void {
     const { DOMElement, DOMCollection } = prettyFormat.plugins

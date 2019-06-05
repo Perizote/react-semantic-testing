@@ -1,4 +1,5 @@
 import { DOMWindow } from 'jsdom'
+import { DOMNode } from './withTools'
 
 enum EventType {
   MouseEvent = 'MouseEvent',
@@ -54,7 +55,7 @@ type HTMLElementWithValue =
   | HTMLProgressElement
   | HTMLParamElement
 
-const EVENTS: Array<DOMEvent> = [
+const EVENTS: DOMEvent[] = [
   { type: EventType.MouseEvent, name: EventName.Click, content: { bubbles: true, cancelable: true } },
   { type: EventType.Event, name: EventName.Submit, content: { bubbles: true, cancelable: true } },
   { type: EventType.InputEvent, name: EventName.Change, content: { bubbles: true } },
@@ -68,9 +69,9 @@ const EVENTS: Array<DOMEvent> = [
   { type: EventType.KeyboardEvent, name: EventName.KeyDown, content: { bubbles: true, cancelable: true } },
 ]
 
-const withEvents = (node: Node): NodeWithEvents => EVENTS.reduce(getEventNormalizer(node), {})
+const withEvents = (node: DOMNode): NodeWithEvents => EVENTS.reduce(getEventNormalizer(node), {})
 
-const getEventNormalizer = (node: Node) => (normalizedEvents: NodeWithEvents, event: DOMEvent): NodeWithEvents => ({
+const getEventNormalizer = (node: DOMNode) => (normalizedEvents: NodeWithEvents, event: DOMEvent): NodeWithEvents => ({
   ...normalizedEvents,
   [event.name]: (newEvent: Event): void => {
     const updatedEvent = {
@@ -103,7 +104,7 @@ function createWindowEvent(event: DOMEvent): void | Event {
   return new WindowEvent(event.name.toLowerCase(), event.content)
 }
 
-function setNativeValue(node: Node, event: Event): void | never {
+function setNativeValue(node: DOMNode, event: Event): void | never {
   if (!event.target) { return }
   const { value } = event.target as HTMLElementWithValue
   if (value === undefined) { return }
