@@ -2,7 +2,8 @@
   "name": "aguacatest",
   "version": "0.0.1",
   "description": "",
-  "main": "src/index.s",
+  "main": "src/index.js",
+  "types": "build/index.d.ts",
   "scripts": {
     "test": "jest --config config/jest.config.json",
     "test:watch": "jest --watch --config config/jest.config.json",
