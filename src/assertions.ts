@@ -1,9 +1,15 @@
-import { getTextComparator, getMultipleTextComparator, getValueComparator, TextMatcher } from './utils/matchers'
+import {
+  includesText,
+  trimAndCollapseText,
+  getTextComparator,
+  getValueComparator,
+  TextMatcher
+} from './utils/matchers'
 import { NodeWithEvents } from './withEvents'
 import { NodeWithQueries } from './withQueries'
 import { NodeWithHelpers } from './withHelpers'
 import { NodeWithMutations } from './withMutations'
-import { DOMNode, DOMNodeList } from './utils/DOMNode'
+import { DOMNode, DOMNodeList, DOMAttribute } from './utils/DOMNode'
 
 type Matcher = {
   message: () => string,
@@ -28,14 +34,14 @@ const assertions = {
       : buildFailingMatcher('expected node to be rendered')
   },
   toHaveText(node: NodeContainingTools, text: TextMatcher): Matcher {
-    const isInAChildNode = (text: TextMatcher, node: DOMNode): boolean =>
-      ([ ...node.querySelectorAll('*') ] as DOMNodeList).some(getMultipleTextComparator(text))
-    const isInCurrentNode = getTextComparator(text)
     const nodeText = node.getText() || ''
+    const includesAria = (rawNode: DOMNode): boolean =>
+      ([ ...rawNode.querySelectorAll(`[${ DOMAttribute.AriaLabel }], [${ DOMAttribute.Alt }]`) ] as DOMNodeList)
+        .some(getTextComparator(text))
 
-    return isInCurrentNode(node.getRawNode()) || isInAChildNode(text, node.getRawNode())
+    return includesText(text, nodeText) ||includesAria(node.getRawNode())
       ? buildPassingMatcher(`expected node not to have text "${ text }" but actually does`)
-      : buildFailingMatcher(`expected node to have text "${ text }" but instead has "${ nodeText.trim() }"`)
+      : buildFailingMatcher(`expected node to have text "${ text }" but instead has "${ trimAndCollapseText(nodeText) }"`)
   },
   toBeDisabled(node: NodeContainingTools): Matcher {
     return node.getRawNode().disabled

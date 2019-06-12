@@ -2,15 +2,27 @@ import { DOMNode, DOMAttribute } from './DOMNode'
 
 type TextMatcher = undefined | string | number | RegExp
 
-const compareText = (text: TextMatcher, textToCompare: string): boolean => {
+const matchesText = (text: TextMatcher, textToCompare: string): boolean => {
   if (text === undefined) { return false }
 
   if (typeof text === 'string' || typeof text === 'number') {
-    return text === textToCompare
+    return text === trimAndCollapseText(textToCompare)
   }
 
-  return text.test(textToCompare)
+  return text.test(trimAndCollapseText(textToCompare))
 }
+
+const includesText = (text: TextMatcher, textToCompare: string): boolean => {
+  if (text === undefined) { return false }
+
+  if (text instanceof RegExp) {
+    return text.test(trimAndCollapseText(textToCompare))
+  }
+
+  return trimAndCollapseText(textToCompare).includes(String(text))
+}
+
+const trimAndCollapseText = (text: string): string => text.trim().replace(/\s+/g, ' ')
 
 const getTextFromNode = (node: Node): string => {
   const isTextNode = ({ nodeType, textContent }: Node): boolean => nodeType === Node.TEXT_NODE && Boolean(textContent)
@@ -25,38 +37,20 @@ const getTextFromNode = (node: Node): string => {
 const getTextComparator = (text: TextMatcher) => (node: DOMNode): boolean => {
   const ariaLabel = node.getAttribute(DOMAttribute.AriaLabel)
   if (ariaLabel) {
-    return compareText(text, ariaLabel)
+    return matchesText(text, ariaLabel)
   }
 
   const alt = node.getAttribute(DOMAttribute.Alt)
   if (alt) {
-    return compareText(text, alt)
+    return matchesText(text, alt)
   }
 
-  return compareText(text, getTextFromNode(node))
-}
-
-const getMultipleTextComparator = (text: TextMatcher) => (node: DOMNode): boolean => {
-  const ariaLabel = node.getAttribute(DOMAttribute.AriaLabel)
-  const alt = node.getAttribute(DOMAttribute.Alt)
-  if (!ariaLabel && !alt) {
-    return compareText(text, getTextFromNode(node))
-  }
-
-  if (ariaLabel) {
-    return compareText(text, ariaLabel)
-  }
-
-  if (alt) {
-    return compareText(text, alt)
-  }
-
-  throw new Error(`Cannot find text ${ text } in given node`)
+  return matchesText(text, getTextFromNode(node))
 }
 
 const getLabelComparator =
   (text: TextMatcher) =>
-    (node: HTMLLabelElement): boolean => compareText(text, getTextFromNode(node))
+    (node: HTMLLabelElement): boolean => matchesText(text, getTextFromNode(node))
 
 const getAttributeComparator =
   (attributeValue: TextMatcher, attributeName: DOMAttribute) =>
@@ -64,7 +58,7 @@ const getAttributeComparator =
       const attribute = node.getAttribute(attributeName)
       if (!attribute) { return false }
 
-      return compareText(attributeValue, attribute)
+      return matchesText(attributeValue, attribute)
 }
 
 const getValueComparator = (value: TextMatcher) => (node: DOMNode): boolean => {
@@ -72,15 +66,17 @@ const getValueComparator = (value: TextMatcher) => (node: DOMNode): boolean => {
 
   if (Boolean(options)) {
     const selectedOption = options[selectedIndex]
-    return compareText(value, selectedOption.textContent || '')
+    return matchesText(value, selectedOption.textContent || '')
   }
 
-  return compareText(value, nodeValue)
+  return matchesText(value, nodeValue)
 }
 
 export {
+  matchesText,
+  includesText,
+  trimAndCollapseText,
   getTextComparator,
-  getMultipleTextComparator,
   getLabelComparator,
   getAttributeComparator,
   getValueComparator,
