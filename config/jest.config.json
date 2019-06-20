@@ -1,11 +1,11 @@
 {
   "rootDir": "..",
   "testMatch": [
-    "<rootDir>/**/?(*.)(test).ts?(x)"
+    "<rootDir>/**/?(*.)(test).js"
   ],
   "moduleFileExtensions": ["ts", "tsx", "json", "js"],
   "moduleNameMapper": {
     "^aguacatest$": "<rootDir>/src"
   },
-  "setupFilesAfterEnv": ["<rootDir>/config/setup.ts"]
+  "setupFilesAfterEnv": ["<rootDir>/config/setup.js"]
 }

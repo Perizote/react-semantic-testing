@@ -1,7 +1,7 @@
 import { withTools, NodeWithTools } from '../src/withTools'
 import { DOMNode } from '../src/utils/DOMNode'
 
-const mountedComponents = new Set()
+const mountedComponents: Set<DOMNode> = new Set()
 
 function mount(node: string): NodeWithTools {
   const rootNode = document.body.appendChild(document.createElement('div')) as DOMNode

@@ -12,18 +12,18 @@ import { NodeWithMutations } from './withMutations'
 import { DOMNode, DOMNodeList, DOMAttribute } from './utils/DOMNode'
 
 type Matcher = {
-  message: () => string,
+  message: string,
   pass: boolean,
 }
 type NodeContainingTools = NodeWithEvents & NodeWithQueries & NodeWithHelpers & NodeWithMutations
 
 const buildPassingMatcher = (message: string): Matcher => ({
-  message: () => message,
+  message,
   pass: true,
 })
 
 const buildFailingMatcher = (message: string): Matcher => ({
-  message: () => message,
+  message,
   pass: false,
 })
 
