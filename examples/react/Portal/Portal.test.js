@@ -2,7 +2,7 @@ import React from 'react'
 
 import { Portal } from './Portal'
 import { mount, unmount } from '../mounting'
-import { withTools } from 'aguacatest'
+import { withTools } from 'react-semantic-testing'
 
 describe('portal', () => {
   it('should render content in a different location', () => {

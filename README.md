@@ -1,4 +1,4 @@
-# Aguacatest
+# React Semantic Testing
 The semantic way of testing your UI like your users would do
 
 ## Motivation
@@ -11,7 +11,7 @@ For this purpose, Understanding how users interact with the UI is essential (in 
 
 So, basically, what they do is `look for` UI elements by `reading` or `assitive technologies` and then `dispatching events` like click, change, submit and so on.
 
-`Aguacatest` does it all and is not coupled to any specific modern frontend framework, it's written for vanilla javascript and you should write your own mount/unmount functions using the given tools. You can find more info in the examples folder, there are mounting functions for vanilla javascript and react.
+`react-semantic-testing` does it all and is not coupled to any specific modern frontend framework, it's written for vanilla javascript and you should write your own mount/unmount functions using the given tools. You can find more info in the examples folder, there are mounting functions for vanilla javascript and react.
 
 ### Queries
 In order of preference
@@ -52,22 +52,22 @@ UI may be updated asynchronously and is usually painful and hard to handle. But 
 Users dispatch actions by clicking, changing and touching the UI (and many other ways). Just use any event you like as if it were vanilla javascript (it actually is).
 
 ### Helpers
-`Aguacatest` encourages to test as a user (told you so many times already), but also exposes a few helpers for debugging purposes:
+`react-semantic-testing` encourages to test as a user (told you so many times already), but also exposes a few helpers for debugging purposes:
 - getRawNode: returns the vanilla js node
 - getText
 - getValue
 - logTree
 
 ### Assertions
-`Aguacatest` also extends `Jest` so that your expects look way more semantic and can only be made over things that you user would do (yes, again):
+`react-semantic-testing` also extends `Jest` so that your expects look way more semantic and can only be made over things that you user would do (yes, again):
 - toBeRendered: looks if the given node is a child of `document.body`
 - toHaveText
 - toBeDisabled
 - toHaveValue
 
-These assertions need to receive a node wrapped by the tools that `Aguacatest` provides (as many of the comprobations that it does are using the above `helpers`).
+These assertions need to receive a node wrapped by the tools that `react-semantic-testing` provides (as many of the comprobations that it does are using the above `helpers`).
 
 ## Usage
-`Aguacatest` exposes a group of tools that let you `query`, handle `async mutations`, dispatch `events` over the UI of your app so that you can test it in the same way a user would do.
+`react-semantic-testing` exposes a group of tools that let you `query`, handle `async mutations`, dispatch `events` over the UI of your app so that you can test it in the same way a user would do.
 
 

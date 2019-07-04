@@ -6,7 +6,7 @@ import { Provider } from 'react-redux'
 import { Router } from 'react-router-dom'
 import { createMemoryHistory } from 'history'
 
-import { withEvents, withQueries, withHelpers, withMutations } from 'aguacatest'
+import { withEvents, withQueries, withHelpers, withMutations } from 'react-semantic-testing'
 
 const mountedComponents = new Set()
 

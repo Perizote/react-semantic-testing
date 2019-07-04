@@ -1,7 +1,7 @@
 {
-  "name": "aguacatest",
+  "name": "react-semantic-testing",
   "version": "0.0.1",
-  "description": "",
+  "description": "The semantic way of testing your React app like your users would do",
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "scripts": {
@@ -18,7 +18,7 @@
     "test",
     "integration",
     "unit",
-    "tools",
+    "semantic",
     "utils",
     "react",
     "javascript",

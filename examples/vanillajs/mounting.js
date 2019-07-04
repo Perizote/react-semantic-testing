@@ -1,4 +1,4 @@
-import { withTools } from 'aguacatest'
+import { withTools } from 'react-semantic-testing'
 
 const mountedComponents = new Set()
 

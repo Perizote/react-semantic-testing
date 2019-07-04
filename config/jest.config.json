@@ -5,7 +5,7 @@
   ],
   "moduleFileExtensions": ["ts", "tsx", "json", "js"],
   "moduleNameMapper": {
-    "^aguacatest$": "<rootDir>/src"
+    "^react-semantic-testing$": "<rootDir>/src"
   },
   "setupFilesAfterEnv": ["<rootDir>/config/setup.js"]
 }
