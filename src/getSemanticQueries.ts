@@ -15,7 +15,7 @@ type QueryForNodeListResult = SemanticNodeWithoutQueries[]
 type QueryForSingleNodeResult = SemanticNodeWithoutQueries
 type QueryResult = QueryForSingleNodeResult | QueryForNodeListResult
 type Query = () => QueryResult
-type NodeWithQueries = {
+type SemanticQueries = {
   getByDataTest: (dataTest: TextMatcher) => QueryForSingleNodeResult,
   getAllByDataTest: (dataTest: TextMatcher) => QueryForNodeListResult,
   getByText: (text: TextMatcher) => QueryForSingleNodeResult,
@@ -41,7 +41,7 @@ const withSemantic = (node: DOMNode): SemanticNodeWithoutQueries => ({
 
 const buildQueryForLists = (listOfFoundNodes: DOMNodeList): QueryForNodeListResult => listOfFoundNodes.map(withSemantic)
 
-const withQueries = (node: DOMNode): NodeWithQueries => ({
+const getSemanticQueries = (node: DOMNode): SemanticQueries => ({
   getByDataTest(dataTest: TextMatcher): QueryForSingleNodeResult {
     const query = () => withSemantic(
       ([ ...node.querySelectorAll(`[${ DOMAttribute.DataTest }]`) ] as DOMNodeList)
@@ -102,10 +102,10 @@ const withQueries = (node: DOMNode): NodeWithQueries => ({
 })
 
 export {
-  withQueries,
+  getSemanticQueries,
   setAsLastQuery,
   getLastQuery as lastQuery,
-  NodeWithQueries,
+  SemanticQueries,
   QueryResult,
   QueryForNodeListResult,
   QueryForSingleNodeResult

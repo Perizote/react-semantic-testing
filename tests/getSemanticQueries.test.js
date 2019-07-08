@@ -1,6 +1,6 @@
 import { mount, unmount } from './mounting.util'
 
-describe('withQueries', () => {
+describe('getSemanticQueries', () => {
   const node = `
     <div role="main">
       <p data-test="a-data-test">a text</p>

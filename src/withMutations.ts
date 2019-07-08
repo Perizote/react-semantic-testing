@@ -1,13 +1,13 @@
 import 'mutationobserver-shim'
 
 import {
-  withQueries,
+  getSemanticQueries,
   lastQuery,
-  NodeWithQueries,
+  SemanticQueries,
   QueryResult,
   QueryForNodeListResult,
   QueryForSingleNodeResult,
-} from './withQueries'
+} from './getSemanticQueries'
 import { withEvents, NodeWithEvents } from './withEvents'
 import { withHelpers, NodeWithHelpers } from './withHelpers'
 import { DOMNode } from './utils/DOMNode'
@@ -18,7 +18,7 @@ type Options = {
   node: DOMNode,
   error: string,
 }
-type SemanticNodeWithoutMutations = NodeWithQueries & NodeWithEvents & NodeWithHelpers
+type SemanticNodeWithoutMutations = SemanticQueries & NodeWithEvents & NodeWithHelpers
 type NodeWithMutations = {
   waitUntilItChanges: () => Promise<SemanticNodeWithoutMutations>,
   waitUntilItAppears: () => Promise<QueryResult | void>,
@@ -53,7 +53,7 @@ const createMutationObserver = async (callback: Callback, options: Options): Pro
 const withSemantic = (node: DOMNode): SemanticNodeWithoutMutations => ({
   ...withEvents(node),
   ...withHelpers(node),
-  ...withQueries(node),
+  ...getSemanticQueries(node),
 })
 
 const withMutations = (node: DOMNode): NodeWithMutations => ({
