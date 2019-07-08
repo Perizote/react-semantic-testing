@@ -1,14 +1,14 @@
 import prettyFormat from 'pretty-format'
 import { DOMNode } from './utils/DOMNode'
 
-type NodeWithHelpers = {
+type SemanticHelpers = {
   getRawNode: () => DOMNode,
   getText: () => string | null,
   getValue: () => string | number | undefined,
   logTree: (options: object) => void,
 }
 
-const withHelpers = (node: DOMNode): NodeWithHelpers => ({
+const getSemanticHelpers = (node: DOMNode): SemanticHelpers => ({
   getRawNode(): DOMNode {
     return node
   },
@@ -31,4 +31,4 @@ const withHelpers = (node: DOMNode): NodeWithHelpers => ({
   },
 })
 
-export { withHelpers, NodeWithHelpers }
+export { getSemanticHelpers, SemanticHelpers }

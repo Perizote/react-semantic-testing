@@ -1,5 +1,5 @@
 import { getSemanticEvents, SemanticEvents } from './getSemanticEvents'
-import { withHelpers, NodeWithHelpers } from './withHelpers'
+import { getSemanticHelpers, SemanticHelpers } from './getSemanticHelpers'
 import { getSemanticMutations, SemanticMutations } from './getSemanticMutations'
 import {
   getTextComparator,
@@ -10,7 +10,7 @@ import {
 } from './utils/matchers'
 import { DOMNode, DOMNodeList, DOMAttribute, DOMTag } from './utils/DOMNode'
 
-type SemanticNodeWithoutQueries = SemanticEvents & NodeWithHelpers & SemanticMutations
+type SemanticNodeWithoutQueries = SemanticEvents & SemanticHelpers & SemanticMutations
 type QueryForNodeListResult = SemanticNodeWithoutQueries[]
 type QueryForSingleNodeResult = SemanticNodeWithoutQueries
 type QueryResult = QueryForSingleNodeResult | QueryForNodeListResult
@@ -35,7 +35,7 @@ const getLastQuery = (): QueryResult => lastQuery()
 
 const withSemantic = (node: DOMNode): SemanticNodeWithoutQueries => ({
   ...getSemanticEvents(node),
-  ...withHelpers(node),
+  ...getSemanticHelpers(node),
   ...getSemanticMutations(node),
 })
 

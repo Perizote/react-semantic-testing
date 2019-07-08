@@ -1,6 +1,6 @@
 export { withSemantic } from './withSemantic'
 export { getSemanticEvents } from './getSemanticEvents'
 export { getSemanticQueries } from './getSemanticQueries'
-export { withHelpers } from './withHelpers'
+export { getSemanticHelpers } from './getSemanticHelpers'
 export { getSemanticMutations } from './getSemanticMutations'
 export { assertions } from './assertions'

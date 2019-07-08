@@ -1,6 +1,6 @@
 import { withSemantic } from '../src'
 
-describe('withHelpers', () => {
+describe('getSemanticHelpers', () => {
   const node = `
     <select>
       <option value="1" selected>Gilded Rose</option>

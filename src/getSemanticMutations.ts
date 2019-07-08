@@ -9,7 +9,7 @@ import {
   QueryForSingleNodeResult,
 } from './getSemanticQueries'
 import { getSemanticEvents, SemanticEvents } from './getSemanticEvents'
-import { withHelpers, NodeWithHelpers } from './withHelpers'
+import { getSemanticHelpers, SemanticHelpers } from './getSemanticHelpers'
 import { DOMNode } from './utils/DOMNode'
 
 type Callback = (mutations: MutationRecord[]) => any
@@ -18,7 +18,7 @@ type Options = {
   node: DOMNode,
   error: string,
 }
-type SemanticNodeWithoutMutations = SemanticQueries & SemanticEvents & NodeWithHelpers
+type SemanticNodeWithoutMutations = SemanticQueries & SemanticEvents & SemanticHelpers
 type SemanticMutations = {
   waitUntilItChanges: () => Promise<SemanticNodeWithoutMutations>,
   waitUntilItAppears: () => Promise<QueryResult | void>,
@@ -52,7 +52,7 @@ const createMutationObserver = async (callback: Callback, options: Options): Pro
 
 const withSemantic = (node: DOMNode): SemanticNodeWithoutMutations => ({
   ...getSemanticEvents(node),
-  ...withHelpers(node),
+  ...getSemanticHelpers(node),
   ...getSemanticQueries(node),
 })
 
