@@ -18,11 +18,11 @@ type Options = {
   node: DOMNode,
   error: string,
 }
-type NodeWithToolsWithoutMutations = NodeWithQueries & NodeWithEvents & NodeWithHelpers
+type SemanticNodeWithoutMutations = NodeWithQueries & NodeWithEvents & NodeWithHelpers
 type NodeWithMutations = {
-  waitUntilItChanges: () => Promise<NodeWithToolsWithoutMutations>,
+  waitUntilItChanges: () => Promise<SemanticNodeWithoutMutations>,
   waitUntilItAppears: () => Promise<QueryResult | void>,
-  waitUntilItDisappears: (mutations: MutationRecord[]) => Promise<void | NodeWithToolsWithoutMutations>,
+  waitUntilItDisappears: (mutations: MutationRecord[]) => Promise<void | SemanticNodeWithoutMutations>,
 }
 
 const createMutationObserver = async (callback: Callback, options: Options): Promise<any> => (
@@ -50,15 +50,15 @@ const createMutationObserver = async (callback: Callback, options: Options): Pro
   })
 )
 
-const withTools = (node: DOMNode): NodeWithToolsWithoutMutations => ({
+const withSemantic = (node: DOMNode): SemanticNodeWithoutMutations => ({
   ...withEvents(node),
   ...withHelpers(node),
   ...withQueries(node),
 })
 
 const withMutations = (node: DOMNode): NodeWithMutations => ({
-  async waitUntilItChanges(): Promise<NodeWithToolsWithoutMutations> {
-    const onChange = (): NodeWithToolsWithoutMutations => withTools(node)
+  async waitUntilItChanges(): Promise<SemanticNodeWithoutMutations> {
+    const onChange = (): SemanticNodeWithoutMutations => withSemantic(node)
     const options = {
       node,
       error: 'Timeout waiting for node to change',
@@ -85,8 +85,8 @@ const withMutations = (node: DOMNode): NodeWithMutations => ({
 
     return createMutationObserver(onRender, options)
   },
-  async waitUntilItDisappears(): Promise<void | NodeWithToolsWithoutMutations> {
-    const onDisappear = (mutations: MutationRecord[]): void | NodeWithToolsWithoutMutations => {
+  async waitUntilItDisappears(): Promise<void | SemanticNodeWithoutMutations> {
+    const onDisappear = (mutations: MutationRecord[]): void | SemanticNodeWithoutMutations => {
       const hasBeenDisappeared = mutations
         .filter(({ removedNodes }) => removedNodes.length > 0)
         .map(({ removedNodes }) => removedNodes)
@@ -95,7 +95,7 @@ const withMutations = (node: DOMNode): NodeWithMutations => ({
 
       if (!hasBeenDisappeared) { return }
 
-      return withTools(node)
+      return withSemantic(node)
     }
     const options = {
       node: (node.parentNode as DOMNode) || document,

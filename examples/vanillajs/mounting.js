@@ -1,4 +1,4 @@
-import { withTools } from 'react-semantic-testing'
+import { withSemantic } from 'react-semantic-testing'
 
 const mountedComponents = new Set()
 
@@ -8,7 +8,7 @@ function mount(component) {
 
   component(rootNode)
 
-  return withTools(rootNode)
+  return withSemantic(rootNode)
 }
 
 function unmount() {

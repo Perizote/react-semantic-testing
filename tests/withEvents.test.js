@@ -1,4 +1,4 @@
-import { withTools } from '../src'
+import { withSemantic } from '../src'
 
 describe('withEvents', () => {
   const events = [
@@ -21,7 +21,7 @@ describe('withEvents', () => {
       const node = document.createElement(nodeType)
       node.addEventListener(eventType, eventCallback)
 
-      withTools(node)[eventName]()
+      withSemantic(node)[eventName]()
 
       expect(eventCallback).toHaveBeenCalledTimes(1)
     })
@@ -36,7 +36,7 @@ describe('withEvents', () => {
     node.addEventListener('change', eventCallback)
     expect(node.value).not.toBe(value)
 
-    withTools(node).change({ target: { value } })
+    withSemantic(node).change({ target: { value } })
 
     expect(eventCallback).toHaveBeenCalledTimes(1)
     expect(node.value).toBe(value)
@@ -45,7 +45,7 @@ describe('withEvents', () => {
   it('should throw an error when the element cannot have a value', () => {
     const node = document.createElement('div')
 
-    expect(() => withTools(node).change({ target: { value: 'just a value' } }))
+    expect(() => withSemantic(node).change({ target: { value: 'just a value' } }))
       .toThrow('Element cannot have value property')
   })
 
@@ -55,7 +55,7 @@ describe('withEvents', () => {
     const key = 'a'
     node.addEventListener('keypress', eventCallback)
 
-    withTools(node).keyPress({ key })
+    withSemantic(node).keyPress({ key })
 
     expect(eventCallback).toHaveBeenCalledTimes(1)
     expect(eventCallback).toHaveBeenCalledWith(expect.objectContaining({ key }))

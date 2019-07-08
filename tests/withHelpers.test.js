@@ -1,4 +1,4 @@
-import { withTools } from '../src'
+import { withSemantic } from '../src'
 
 describe('withHelpers', () => {
   const node = `
@@ -10,7 +10,7 @@ describe('withHelpers', () => {
   let nodeWithTools
 
   beforeEach(() => {
-    nodeWithTools = withTools(node)
+    nodeWithTools = withSemantic(node)
   })
 
   it('should return the raw node without any tool', () => {

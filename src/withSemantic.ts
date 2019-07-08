@@ -4,17 +4,17 @@ import { withHelpers, NodeWithHelpers } from './withHelpers'
 import { withMutations, NodeWithMutations } from './withMutations'
 import { DOMNode } from './utils/DOMNode'
 
-type NodeWithTools =
+type SemanticNode =
   & NodeWithEvents
   & NodeWithQueries
   & NodeWithHelpers
   & NodeWithMutations
 
-const withTools = (node: DOMNode): NodeWithTools => ({
+const withSemantic = (node: DOMNode): SemanticNode => ({
   ...withEvents(node),
   ...withQueries(node),
   ...withHelpers(node),
   ...withMutations(node),
 })
 
-export { withTools, NodeWithTools }
+export { withSemantic, SemanticNode }

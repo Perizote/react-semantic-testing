@@ -1,15 +1,15 @@
-import { withTools, NodeWithTools } from '../src/withTools'
+import { withSemantic, SemanticNode } from '../src/withSemantic'
 import { DOMNode } from '../src/utils/DOMNode'
 
 const mountedComponents: Set<DOMNode> = new Set()
 
-function mount(node: string): NodeWithTools {
+function mount(node: string): SemanticNode {
   const rootNode = document.body.appendChild(document.createElement('div')) as DOMNode
   mountedComponents.add(rootNode)
 
   rootNode.innerHTML = node
 
-  return withTools(rootNode)
+  return withSemantic(rootNode)
 }
 
 function unmount(): void {

@@ -1,4 +1,4 @@
-export { withTools } from './withTools'
+export { withSemantic } from './withSemantic'
 export { withEvents } from './withEvents'
 export { withQueries } from './withQueries'
 export { withHelpers } from './withHelpers'

@@ -1,6 +1,6 @@
 import { mount, unmount } from './mounting.util'
 
-describe('withTools', () => {
+describe('withSemantic', () => {
   const node = '<button disabled>a disabled button</button>'
   let nodeMountedWithTools
 

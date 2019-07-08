@@ -10,9 +10,9 @@ import {
 } from './utils/matchers'
 import { DOMNode, DOMNodeList, DOMAttribute, DOMTag } from './utils/DOMNode'
 
-type NodeWithToolsWithoutQueries = NodeWithEvents & NodeWithHelpers & NodeWithMutations
-type QueryForNodeListResult = NodeWithToolsWithoutQueries[]
-type QueryForSingleNodeResult = NodeWithToolsWithoutQueries
+type SemanticNodeWithoutQueries = NodeWithEvents & NodeWithHelpers & NodeWithMutations
+type QueryForNodeListResult = SemanticNodeWithoutQueries[]
+type QueryForSingleNodeResult = SemanticNodeWithoutQueries
 type QueryResult = QueryForSingleNodeResult | QueryForNodeListResult
 type Query = () => QueryResult
 type NodeWithQueries = {
@@ -33,17 +33,17 @@ const setAsLastQuery = (query: Query): void => {
 
 const getLastQuery = (): QueryResult => lastQuery()
 
-const withTools = (node: DOMNode): NodeWithToolsWithoutQueries => ({
+const withSemantic = (node: DOMNode): SemanticNodeWithoutQueries => ({
   ...withEvents(node),
   ...withHelpers(node),
   ...withMutations(node),
 })
 
-const buildQueryForLists = (listOfFoundNodes: DOMNodeList): QueryForNodeListResult => listOfFoundNodes.map(withTools)
+const buildQueryForLists = (listOfFoundNodes: DOMNodeList): QueryForNodeListResult => listOfFoundNodes.map(withSemantic)
 
 const withQueries = (node: DOMNode): NodeWithQueries => ({
   getByDataTest(dataTest: TextMatcher): QueryForSingleNodeResult {
-    const query = () => withTools(
+    const query = () => withSemantic(
       ([ ...node.querySelectorAll(`[${ DOMAttribute.DataTest }]`) ] as DOMNodeList)
         .find(getAttributeComparator(dataTest, DOMAttribute.DataTest)) as DOMNode
     )
@@ -59,7 +59,7 @@ const withQueries = (node: DOMNode): NodeWithQueries => ({
     return query()
   },
   getByText(text: TextMatcher): QueryForSingleNodeResult {
-    const query = () => withTools(
+    const query = () => withSemantic(
       ([ ...node.querySelectorAll('*') ] as DOMNodeList)
         .find(getTextComparator(text)) as DOMNode
     )
@@ -78,13 +78,13 @@ const withQueries = (node: DOMNode): NodeWithQueries => ({
     const query = () => {
       const { control } = ([ ...node.querySelectorAll(DOMTag.Label) ] as DOMNodeList)
         .find(getLabelComparator(labelText)) as HTMLLabelElement
-      return withTools(control as DOMNode)
+      return withSemantic(control as DOMNode)
     }
     setAsLastQuery(query)
     return query()
   },
   getByRole(role: TextMatcher): QueryForSingleNodeResult {
-    const query = () => withTools(
+    const query = () => withSemantic(
       ([ ...node.querySelectorAll(`[${ DOMAttribute.Role }]`) ] as DOMNodeList)
         .find(getAttributeComparator(role, DOMAttribute.Role)) as DOMNode
     )
@@ -92,7 +92,7 @@ const withQueries = (node: DOMNode): NodeWithQueries => ({
     return query()
   },
   getByValue(value: TextMatcher): QueryForSingleNodeResult {
-    const query = () => withTools(
+    const query = () => withSemantic(
       ([ ...node.querySelectorAll(`${ DOMTag.Input }, ${ DOMTag.Select }, ${ DOMTag.TextArea }`) ] as DOMNodeList)
         .find(getValueComparator(value)) as DOMNode
     )
