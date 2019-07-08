@@ -1,6 +1,6 @@
 import { withSemantic } from '../src'
 
-describe('withEvents', () => {
+describe('getSemanticEvents', () => {
   const events = [
     { eventName: 'click', eventType: 'click', nodeType: 'button' },
     { eventName: 'submit', eventType: 'submit', nodeType: 'form' },

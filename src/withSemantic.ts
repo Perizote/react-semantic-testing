@@ -1,17 +1,17 @@
-import { withEvents, NodeWithEvents } from './withEvents'
+import { getSemanticEvents, SemanticEvents } from './getSemanticEvents'
 import { getSemanticQueries, SemanticQueries } from './getSemanticQueries'
 import { withHelpers, NodeWithHelpers } from './withHelpers'
 import { withMutations, NodeWithMutations } from './withMutations'
 import { DOMNode } from './utils/DOMNode'
 
 type SemanticNode =
-  & NodeWithEvents
+  & SemanticEvents
   & SemanticQueries
   & NodeWithHelpers
   & NodeWithMutations
 
 const withSemantic = (node: DOMNode): SemanticNode => ({
-  ...withEvents(node),
+  ...getSemanticEvents(node),
   ...getSemanticQueries(node),
   ...withHelpers(node),
   ...withMutations(node),

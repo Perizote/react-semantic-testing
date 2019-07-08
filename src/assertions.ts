@@ -6,10 +6,6 @@ import {
   TextMatcher
 } from './utils/matchers'
 import { SemanticNode } from './withSemantic'
-import { NodeWithEvents } from './withEvents'
-import { SemanticQueries } from './getSemanticQueries'
-import { NodeWithHelpers } from './withHelpers'
-import { NodeWithMutations } from './withMutations'
 import { DOMNode, DOMNodeList, DOMAttribute } from './utils/DOMNode'
 
 type Matcher = {

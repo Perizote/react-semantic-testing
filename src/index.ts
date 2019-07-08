@@ -1,5 +1,5 @@
 export { withSemantic } from './withSemantic'
-export { withEvents } from './withEvents'
+export { getSemanticEvents } from './getSemanticEvents'
 export { getSemanticQueries } from './getSemanticQueries'
 export { withHelpers } from './withHelpers'
 export { withMutations } from './withMutations'

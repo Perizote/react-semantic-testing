@@ -1,4 +1,4 @@
-import { withEvents, NodeWithEvents } from './withEvents'
+import { getSemanticEvents, SemanticEvents } from './getSemanticEvents'
 import { withHelpers, NodeWithHelpers } from './withHelpers'
 import { withMutations, NodeWithMutations } from './withMutations'
 import {
@@ -10,7 +10,7 @@ import {
 } from './utils/matchers'
 import { DOMNode, DOMNodeList, DOMAttribute, DOMTag } from './utils/DOMNode'
 
-type SemanticNodeWithoutQueries = NodeWithEvents & NodeWithHelpers & NodeWithMutations
+type SemanticNodeWithoutQueries = SemanticEvents & NodeWithHelpers & NodeWithMutations
 type QueryForNodeListResult = SemanticNodeWithoutQueries[]
 type QueryForSingleNodeResult = SemanticNodeWithoutQueries
 type QueryResult = QueryForSingleNodeResult | QueryForNodeListResult
@@ -34,7 +34,7 @@ const setAsLastQuery = (query: Query): void => {
 const getLastQuery = (): QueryResult => lastQuery()
 
 const withSemantic = (node: DOMNode): SemanticNodeWithoutQueries => ({
-  ...withEvents(node),
+  ...getSemanticEvents(node),
   ...withHelpers(node),
   ...withMutations(node),
 })
