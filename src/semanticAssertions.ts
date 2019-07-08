@@ -23,7 +23,7 @@ const buildFailingMatcher = (message: string): Matcher => ({
   pass: false,
 })
 
-const assertions = {
+const semanticAssertions = {
   toBeRendered(node: SemanticNode): Matcher {
     return document.body.contains(node.getRawNode())
       ? buildPassingMatcher('expected node not to be rendered')
@@ -66,4 +66,4 @@ const assertions = {
   },
 }
 
-export { assertions }
+export { semanticAssertions }
