@@ -19,7 +19,7 @@ type Options = {
   error: string,
 }
 type SemanticNodeWithoutMutations = SemanticQueries & SemanticEvents & NodeWithHelpers
-type NodeWithMutations = {
+type SemanticMutations = {
   waitUntilItChanges: () => Promise<SemanticNodeWithoutMutations>,
   waitUntilItAppears: () => Promise<QueryResult | void>,
   waitUntilItDisappears: (mutations: MutationRecord[]) => Promise<void | SemanticNodeWithoutMutations>,
@@ -56,7 +56,7 @@ const withSemantic = (node: DOMNode): SemanticNodeWithoutMutations => ({
   ...getSemanticQueries(node),
 })
 
-const withMutations = (node: DOMNode): NodeWithMutations => ({
+const getSemanticMutations = (node: DOMNode): SemanticMutations => ({
   async waitUntilItChanges(): Promise<SemanticNodeWithoutMutations> {
     const onChange = (): SemanticNodeWithoutMutations => withSemantic(node)
     const options = {
@@ -106,4 +106,4 @@ const withMutations = (node: DOMNode): NodeWithMutations => ({
   }
 })
 
-export { withMutations, NodeWithMutations }
+export { getSemanticMutations, SemanticMutations }

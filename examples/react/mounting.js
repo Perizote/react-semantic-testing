@@ -6,7 +6,7 @@ import { Provider } from 'react-redux'
 import { Router } from 'react-router-dom'
 import { createMemoryHistory } from 'history'
 
-import { getSemanticEvents, getSemanticQueries, withHelpers, withMutations } from 'react-semantic-testing'
+import { getSemanticEvents, getSemanticQueries, withHelpers, getSemanticMutations } from 'react-semantic-testing'
 
 const mountedComponents = new Set()
 
@@ -14,7 +14,7 @@ const withExtendedToolsForReact = node => ({
   ...extendEvents(getSemanticEvents(node)),
   ...getSemanticQueries(node),
   ...withHelpers(node),
-  ...extendMutations(withMutations(node)),
+  ...extendMutations(getSemanticMutations(node)),
 })
 
 const extendEvents = events => {

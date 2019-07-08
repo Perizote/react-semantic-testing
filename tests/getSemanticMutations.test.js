@@ -1,6 +1,6 @@
 import { mount, unmount } from './mounting.util'
 
-describe('withMutations', () => {
+describe('getSemanticMutations', () => {
   const initialText = 'an initial text'
   const node = `<span>${ initialText }</span>`
   let mountedNodeWithTools
