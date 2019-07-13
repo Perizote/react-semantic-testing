@@ -15,13 +15,12 @@ enum EventName {
   Click = 'click',
   Submit = 'submit',
   Change = 'change',
-  MouseEnter = 'mouseEnter',
-  MouseLeave = 'mouseLeave',
+  MouseEnter = 'mouseOver',
+  MouseLeave = 'mouseOut',
   Focus = 'focus',
   Blur = 'blur',
   Wheel = 'wheel',
   Scroll = 'scroll',
-  KeyPress = 'keyPress',
   KeyDown = 'keyDown',
 }
 
@@ -41,7 +40,6 @@ type SemanticEvents = {
   [EventName.Blur]?: DOMEvent,
   [EventName.Wheel]?: DOMEvent,
   [EventName.Scroll]?: DOMEvent,
-  [EventName.KeyPress]?: DOMEvent,
   [EventName.KeyDown]?: DOMEvent,
 }
 
@@ -55,7 +53,6 @@ const events: DOMEvent[] = [
   { type: EventType.FocusEvent, name: EventName.Blur },
   { type: EventType.WheelEvent, name: EventName.Wheel, content: { bubbles: true, cancelable: true } },
   { type: EventType.UIEvent, name: EventName.Scroll },
-  { type: EventType.KeyboardEvent, name: EventName.KeyPress, content: { bubbles: true, cancelable: true } },
   { type: EventType.KeyboardEvent, name: EventName.KeyDown, content: { bubbles: true, cancelable: true } },
 ]
 
