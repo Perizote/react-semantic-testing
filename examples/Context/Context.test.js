@@ -1,6 +1,28 @@
-import React from 'react'
+import React, { createContext } from 'react'
+import { mount } from 'react-semantic-testing'
 
-import { mountWithContext } from '../mounting'
+function mountWithContext(
+  component,
+  { defaultValue, value = defaultValue, useProvider = true, useConsumer = true } = {}
+) {
+  const { Provider, Consumer } = createContext(defaultValue)
+
+  if (!useProvider) {
+    return mount(<Consumer>{ component }</Consumer>)
+  }
+
+  if (!useConsumer) {
+    return mount(<Provider value={ value }>{ component }</Provider>)
+  }
+
+  return mount(
+    <Provider value={ value }>
+      <Consumer>
+        { component }
+      </Consumer>
+    </Provider>
+  )
+}
 
 describe('context', () => {
   const withTheme = theme => <p>Applied theme: { theme }</p>

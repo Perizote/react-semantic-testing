@@ -1,7 +1,7 @@
 import React from 'react'
+import { mount, unmount } from 'react-semantic-testing'
 
 import { Portal } from './Portal'
-import { mount, unmount } from 'react-semantic-testing'
 
 describe('portal', () => {
   it('should render content in a different location', () => {

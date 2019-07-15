@@ -1,9 +1,20 @@
 import React from 'react'
+import { createStore } from 'redux'
+import { Provider } from 'react-redux'
+import { mount, unmount } from 'react-semantic-testing'
 
-import { mountWithRedux } from '../mounting'
-import { unmount } from 'react-semantic-testing'
 import { CartWithRedux } from './CartWithRedux'
 import { reducer } from './reduxStuff'
+
+function mountWithRedux(component, { initialState, reducer } = {}) {
+  const store = createStore(reducer, initialState)
+
+  return mount(
+    <Provider store={ store }>
+      { component }
+    </Provider>
+  )
+}
 
 describe('cart with redux', () => {
   let cart

@@ -1,7 +1,7 @@
 import React from 'react'
+import { mount, unmount } from 'react-semantic-testing'
 
 import { CartWithHooks } from './CartWithHooks'
-import { mount, unmount } from 'react-semantic-testing'
 
 describe('cart with hooks', () => {
   let cart

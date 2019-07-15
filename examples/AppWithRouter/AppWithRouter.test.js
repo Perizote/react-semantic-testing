@@ -1,8 +1,19 @@
 import React from 'react'
+import { Router } from 'react-router-dom'
+import { createMemoryHistory } from 'history'
+import { mount, unmount } from 'react-semantic-testing'
 
 import { AppWithRouter } from './AppWithRouter'
-import { mountWithRouter } from '../mounting'
-import { unmount } from 'react-semantic-testing'
+
+function mountWithRouter(component, { route = '/' } = {}) {
+  const history = createMemoryHistory({ initialEntries: [ route ] })
+
+  return mount(
+    <Router history={ history }>
+      { component }
+    </Router>
+  )
+}
 
 describe('app with router', () => {
   afterEach(unmount)
