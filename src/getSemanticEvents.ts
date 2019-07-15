@@ -1,3 +1,5 @@
+import { act } from 'react-dom/test-utils'
+
 import { DOMWindow } from 'jsdom'
 import { DOMNode } from './utils/DOMNode'
 
@@ -79,7 +81,9 @@ function dispatchEvent(node: Node, event: DOMEvent): void {
   const windowEvent = createWindowEvent(event)
   if (!windowEvent) { return }
 
-  node.dispatchEvent(windowEvent)
+  act(() => {
+    node.dispatchEvent(windowEvent)
+  })
 }
 
 function createWindowEvent(event: DOMEvent): void | Event {

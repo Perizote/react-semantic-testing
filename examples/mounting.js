@@ -16,10 +16,10 @@ import {
 const mountedComponents = new Set()
 
 const withExtendedToolsForReact = node => ({
-  ...extendEvents(getSemanticEvents(node)),
+  .../*extendEvents(*/getSemanticEvents(node)/*)*/,
   ...getSemanticQueries(node),
   ...getSemanticHelpers(node),
-  ...extendMutations(getSemanticMutations(node)),
+  .../*extendMutations(*/getSemanticMutations(node)/*)*/,
 })
 
 const extendEvents = events => {

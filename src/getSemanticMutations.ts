@@ -1,3 +1,4 @@
+import { act } from 'react-dom/test-utils'
 import 'mutationobserver-shim'
 
 import {
@@ -25,30 +26,36 @@ type SemanticMutations = {
   waitUntilItDisappears: (mutations: MutationRecord[]) => Promise<void | SemanticNodeWithoutMutations>,
 }
 
-const createMutationObserver = async (callback: Callback, options: Options): Promise<any> => (
-  new Promise((resolve, reject) => {
-    const { timeout = 3000, node, error } = options
-    const timeoutId = setTimeout(onTimeout, timeout)
-    const mutationObserver = new MutationObserver(onMutation)
-    mutationObserver.observe(node, { attributes: true, childList: true, characterData: true, subtree: true })
+const createMutationObserver = async (callback: Callback, options: Options): Promise<any> => {
+  let mutationObserver
+  // @ts-ignore
+  await act(async () => {
+    mutationObserver = await new Promise((resolve, reject) => {
+      const { timeout = 3000, node, error } = options
+      const timeoutId = setTimeout(onTimeout, timeout)
+      const mutationObserver = new MutationObserver(onMutation)
+      mutationObserver.observe(node, { attributes: true, childList: true, characterData: true, subtree: true })
 
-    function onTimeout(): void {
-      finish()
-      reject(error)
-    }
+      function onTimeout(): void {
+        finish()
+        reject(error)
+      }
 
-    function onMutation(mutations: MutationRecord[]): void {
-      const result = callback(mutations)
-      finish()
-      resolve(result)
-    }
+      function onMutation(mutations: MutationRecord[]): void {
+        const result = callback(mutations)
+        finish()
+        resolve(result)
+      }
 
-    function finish(): void {
-      clearTimeout(timeoutId)
-      mutationObserver.disconnect()
-    }
+      function finish(): void {
+        clearTimeout(timeoutId)
+        mutationObserver.disconnect()
+      }
+    })
   })
-)
+
+  return mutationObserver
+}
 
 const withSemantic = (node: DOMNode): SemanticNodeWithoutMutations => ({
   ...getSemanticEvents(node),
