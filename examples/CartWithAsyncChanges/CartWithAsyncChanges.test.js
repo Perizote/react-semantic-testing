@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { CartWithAsyncChanges as Cart } from './CartWithAsyncChanges'
-import { mount, unmount } from '../mounting'
+import { mount, unmount } from 'react-semantic-testing'
 
 describe('cart with async changes', () => {
   let cart

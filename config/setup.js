@@ -1,3 +1,3 @@
-import { semanticAssertions } from '../src'
+import { semanticAssertions } from '../src/semanticAssertions'
 
 expect.extend(semanticAssertions)

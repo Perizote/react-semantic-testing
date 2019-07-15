@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { mountWithContext, unmount } from '../mounting'
+import { mountWithContext } from '../mounting'
 
 describe('context', () => {
   const withTheme = theme => <p>Applied theme: { theme }</p>

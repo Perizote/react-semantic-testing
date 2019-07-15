@@ -1,8 +1,7 @@
 import React from 'react'
-import { createStore } from 'redux'
-import { Provider } from 'react-redux'
 
-import { mountWithRedux, unmount } from '../mounting'
+import { mountWithRedux } from '../mounting'
+import { unmount } from 'react-semantic-testing'
 import { CartWithRedux } from './CartWithRedux'
 import { reducer } from './reduxStuff'
 

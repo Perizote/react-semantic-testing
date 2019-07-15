@@ -1,6 +1,5 @@
-// import { withSemantic } from '../src'
 import React, { useState, createElement } from 'react'
-import { mount, unmount } from '../examples/mounting'
+import { mount, unmount } from '../src'
 
 describe('getSemanticEvents', () => {
   const events = [

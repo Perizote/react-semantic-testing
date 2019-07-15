@@ -1,5 +1,5 @@
 import React from 'react'
-import { mount, unmount } from '../examples/mounting'
+import { mount, unmount } from '../src'
 
 describe('withSemanticHelpers', () => {
   const Input = () => (

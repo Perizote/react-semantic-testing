@@ -1,6 +1,6 @@
 import React from 'react'
-import { mount, unmount } from '../examples/mounting'
-import { semanticAssertions } from '../src'
+import { mount, unmount } from '../src'
+import { semanticAssertions } from '../src/semanticAssertions'
 
 describe('semantic assertions can be used to extend jest', () => {
   let form

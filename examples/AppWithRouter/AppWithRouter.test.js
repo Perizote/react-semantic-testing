@@ -1,7 +1,8 @@
 import React from 'react'
 
 import { AppWithRouter } from './AppWithRouter'
-import { mountWithRouter, unmount } from '../mounting'
+import { mountWithRouter } from '../mounting'
+import { unmount } from 'react-semantic-testing'
 
 describe('app with router', () => {
   afterEach(unmount)

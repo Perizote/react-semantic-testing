@@ -3,17 +3,17 @@ import { createPortal } from 'react-dom'
 
 class Portal extends Component {
   componentDidMount = () => {
-    document.body.appendChild(this.props.domNode)
+    document.body.appendChild(this.props.portalRoot)
   }
 
   componentWillUnmount = () => {
-    document.body.removeChild(this.props.domNode)
+    document.body.removeChild(this.props.portalRoot)
   }
 
   render = () => {
     return createPortal(
       this.props.children,
-      this.props.domNode,
+      this.props.portalRoot,
     )
   }
 }

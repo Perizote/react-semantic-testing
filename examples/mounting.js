@@ -1,75 +1,10 @@
 import React, { createContext } from 'react'
-import { render, unmountComponentAtNode } from 'react-dom'
-import { act } from 'react-dom/test-utils'
 import { createStore } from 'redux'
 import { Provider } from 'react-redux'
 import { Router } from 'react-router-dom'
 import { createMemoryHistory } from 'history'
 
-import {
-  getSemanticEvents,
-  getSemanticQueries,
-  getSemanticHelpers,
-  getSemanticMutations,
-} from 'react-semantic-testing'
-
-const mountedComponents = new Set()
-
-const withExtendedToolsForReact = node => ({
-  .../*extendEvents(*/getSemanticEvents(node)/*)*/,
-  ...getSemanticQueries(node),
-  ...getSemanticHelpers(node),
-  .../*extendMutations(*/getSemanticMutations(node)/*)*/,
-})
-
-const extendEvents = events => {
-  return Object.keys(events).reduce((accEvents, eventName) => {
-    const event = events[eventName]
-
-    return {
-      ...accEvents,
-      [eventName]: (...args) => {
-        let result
-
-        act(() => {
-          result = event(...args)
-        })
-
-        return result
-      },
-    }
-  }, {})
-}
-
-const extendMutations = mutations => {
-  return Object.keys(mutations).reduce((accMutations, mutationName) => {
-    const mutation = mutations[mutationName]
-
-    return {
-      ...accMutations,
-      [mutationName]: async (...args) => {
-        let result
-
-        await act(async () => {
-          result = await mutation(...args)
-        })
-
-        return result
-      },
-    }
-  }, {})
-}
-
-function mount(component) {
-  const rootNode = document.body.appendChild(document.createElement('div'))
-  mountedComponents.add(rootNode)
-
-  act(() => {
-    render(component, rootNode)
-  })
-
-  return withExtendedToolsForReact(rootNode)
-}
+import { mount } from 'react-semantic-testing'
 
 function mountWithRedux(component, { initialState, reducer } = {}) {
   const store = createStore(reducer, initialState)
@@ -81,8 +16,8 @@ function mountWithRedux(component, { initialState, reducer } = {}) {
   )
 }
 
-function mountWithRouter(component, { route = '/', initialEntries } = {}) {
-  const history = createMemoryHistory({ initialEntries: [route] })
+function mountWithRouter(component, { route = '/' } = {}) {
+  const history = createMemoryHistory({ initialEntries: [ route ] })
 
   return mount(
     <Router history={ history }>
@@ -98,19 +33,11 @@ function mountWithContext(
   const { Provider, Consumer } = createContext(defaultValue)
 
   if (!useProvider) {
-    return mount(
-      <Consumer>
-        { component }
-      </Consumer>
-    )
+    return mount(<Consumer>{ component }</Consumer>)
   }
 
   if (!useConsumer) {
-    return mount(
-      <Provider value={ value }>
-        { component }
-      </Provider>
-    )
+    return mount(<Provider value={ value }>{ component }</Provider>)
   }
 
   return mount(
@@ -122,15 +49,4 @@ function mountWithContext(
   )
 }
 
-function unmount() {
-  mountedComponents.forEach(component => {
-    if (document.body.contains(component)) {
-      document.body.removeChild(component)
-    }
-
-    unmountComponentAtNode(component)
-    mountedComponents.delete(component)
-  })
-}
-
-export { mount, mountWithRedux, mountWithRouter, mountWithContext, unmount }
+export { mountWithRedux, mountWithRouter, mountWithContext }

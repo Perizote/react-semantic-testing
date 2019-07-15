@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { mount, unmount } from '../examples/mounting'
+import { mount, unmount } from '../src'
 
 describe('getSemanticMutations', () => {
   const initialText = 'an initial text'

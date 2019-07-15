@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { ActEffect, ActEvent, ActTimer, ActPromise, ActAsyncAwait } from './Act'
-import { mount, unmount } from '../mounting'
+import { mount, unmount } from 'react-semantic-testing'
 
 describe('act', () => {
   afterEach(unmount)
